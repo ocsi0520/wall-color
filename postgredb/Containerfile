@@ -1,0 +1,10 @@
+# Use the official PostgreSQL image as the base
+FROM postgres:18
+
+COPY seed/ /docker-entrypoint-initdb.d/
+
+# Expose PostgreSQL port
+EXPOSE 5432
+
+# Default command (inherited from postgres image)
+CMD ["postgres"]
