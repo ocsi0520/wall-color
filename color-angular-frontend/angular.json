@@ -17,6 +17,11 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": {
+              "base": "../color-manager/src/main/resources/static",
+              "browser": ""
+            },
+
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
