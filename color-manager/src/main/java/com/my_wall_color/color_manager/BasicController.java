@@ -1,6 +1,7 @@
 package com.my_wall_color.color_manager;
 import org.springframework.web.bind.annotation.*;
 
+// TODO: move this into test and rename it to DummyController
 @RestController
 @RequestMapping("/api")
 public class BasicController {

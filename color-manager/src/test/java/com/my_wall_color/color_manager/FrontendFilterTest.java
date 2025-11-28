@@ -2,15 +2,33 @@ package com.my_wall_color.color_manager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FrontendFilterTest {
+
+    @Configuration
+    @EnableAutoConfiguration
+    @Import({BasicController.class, FrontendFilter.class})
+    public static class TestConfig {
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            return http.csrf(CsrfConfigurer::disable).authorizeHttpRequests(aaa -> aaa.anyRequest().permitAll()).build();
+        }
+    }
 
     @Autowired
     TestRestTemplate restTemplate;
@@ -19,7 +37,7 @@ class FrontendFilterTest {
     void shouldNotReturnHTMLForApi() {
         var asdResponse = restTemplate.getForEntity("/api/asd", String.class);
         assertThat(asdResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(asdResponse.getHeaders().getContentType()).isNotEqualTo(MediaType.TEXT_HTML);
+        assertThat(asdResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isFalse();
     }
 
     @Test
@@ -33,21 +51,21 @@ class FrontendFilterTest {
     void shouldReturnHTMLForRoot() {
         var rootResponse = restTemplate.getForEntity("/", String.class);
         assertThat(rootResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(rootResponse.getHeaders().getContentType()).isEqualTo(MediaType.TEXT_HTML);
+        assertThat(rootResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
     }
 
     @Test
     void shouldReturnHTMLForIndexRoute() {
         var indexResponse = restTemplate.getForEntity("/index.html", String.class);
         assertThat(indexResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(indexResponse.getHeaders().getContentType()).isEqualTo(MediaType.TEXT_HTML);
+        assertThat(indexResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
     }
 
     @Test
     void shouldReturnHTMLForFrontendRoute() {
         var frontendRouteResponse = restTemplate.getForEntity("/dummy/route", String.class);
         assertThat(frontendRouteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(frontendRouteResponse.getHeaders().getContentType()).isEqualTo(MediaType.TEXT_HTML);
+        assertThat(frontendRouteResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
     }
 
     @Test
