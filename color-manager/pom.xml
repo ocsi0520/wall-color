@@ -74,8 +74,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>1.19.8</version>
             <scope>test</scope>
         </dependency>
 
