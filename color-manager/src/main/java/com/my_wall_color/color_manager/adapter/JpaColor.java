@@ -6,17 +6,17 @@ import jakarta.persistence.*;
 @Table(name = "Color")
 public class JpaColor {
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private short red;
     private short green;
     private short blue;
 
     private String name;
-    private int recorded_by;
+    private Integer recorded_by;
 
-    public JpaColor(long id, short red, short green, short blue, String name, int recorded_by) {
+    public JpaColor(Integer id, short red, short green, short blue, String name, Integer recorded_by) {
         this.id = id;
         this.red = red;
         this.green = green;
@@ -27,11 +27,11 @@ public class JpaColor {
 
     public JpaColor() {}
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -67,11 +67,11 @@ public class JpaColor {
         this.name = name;
     }
 
-    public int getRecorded_by() {
+    public Integer getRecorded_by() {
         return recorded_by;
     }
 
-    public void setRecorded_by(int recorded_by) {
+    public void setRecorded_by(Integer recorded_by) {
         this.recorded_by = recorded_by;
     }
 }

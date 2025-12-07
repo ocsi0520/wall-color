@@ -19,7 +19,7 @@ public class ColorController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<JpaColor> getColorById(@PathVariable long id) {
+    private ResponseEntity<JpaColor> getColorById(@PathVariable int id) {
         return ResponseEntity.of(this.colorRepository.findById(id));
     }
 }

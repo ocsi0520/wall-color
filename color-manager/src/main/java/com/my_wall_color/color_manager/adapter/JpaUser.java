@@ -1,9 +1,6 @@
 package com.my_wall_color.color_manager.adapter;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,8 +11,8 @@ import java.util.List;
 @Table(name = "App_User")
 public class JpaUser implements UserDetails {
     @Id
-    @GeneratedValue
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String username;
     private String password;
@@ -24,18 +21,18 @@ public class JpaUser implements UserDetails {
     public JpaUser() {
     }
 
-    public JpaUser(long id, String username, String password, String name) {
+    public JpaUser(Integer id, String username, String password, String name) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.name = name;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
