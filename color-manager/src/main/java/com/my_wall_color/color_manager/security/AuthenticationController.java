@@ -31,9 +31,9 @@ public class AuthenticationController {
     // TODO: alter SecurityFilter to read token from cookie instead of Authorization header
     // then return the expires in the body so the frontend knows when to login again
     @PostMapping("/auth/login")
-    public String login(@RequestBody Map<String, String> user, HttpServletResponse response) {
+    public String login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         Authentication auth = manager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.get("username"), user.get("password")));
+                new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
         TokenResult tokenResult = tokenService.generateToken(auth);
         response.addCookie(createTokenCookieFrom(tokenResult));
 
