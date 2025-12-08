@@ -28,16 +28,23 @@ public class AuthenticationController {
         return "Hello World";
     }
 
+    // TODO: alter SecurityFilter to read token from cookie instead of Authorization header
+    // then return the expires in the body so the frontend knows when to login again
     @PostMapping("/auth/login")
     public String login(@RequestBody Map<String, String> user, HttpServletResponse response) {
-//        log.debug("User login: {}", user);
         Authentication auth = manager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.get("username"), user.get("password")));
-        String token = tokenService.generateToken(auth);
-//        log.debug("JWT token: {}", token);
-        var tokenCookie = new Cookie("token", token);
-        tokenCookie.setHttpOnly(true); // TODO: setMaxAge
-        response.addCookie(tokenCookie);
-        return token;
+        TokenResult tokenResult = tokenService.generateToken(auth);
+        response.addCookie(createTokenCookieFrom(tokenResult));
+
+        return tokenResult.token();
+    }
+
+    // TODO: set domain, probably from env
+    private Cookie createTokenCookieFrom(TokenResult tokenResult) {
+        Cookie tokenCookie = new Cookie("token", tokenResult.token());
+        tokenCookie.setHttpOnly(true);
+        tokenCookie.setMaxAge((int) tokenResult.maxAge().toSeconds());
+        return tokenCookie;
     }
 }

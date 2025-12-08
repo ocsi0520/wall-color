@@ -13,6 +13,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 record LoginRequest(String username, String password) {
@@ -20,6 +22,7 @@ record LoginRequest(String username, String password) {
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthenticationControllerTest {
+    private static final String JWT_REGEXP_PATTERN = "((?:\\.?(?:[A-Za-z0-9-_]+)){3})";
 
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             "postgres:18-alpine"
@@ -59,6 +62,23 @@ class AuthenticationControllerTest {
         ResponseEntity<String> response = restTemplate.postForEntity("/api/auth/login", loginRequest, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        testLoginCookie(response);
+        testLoginResponse(response);
+    }
+
+    private void testLoginResponse(ResponseEntity<String> response) {
+        assertThat(response.getBody()).matches(JWT_REGEXP_PATTERN);
+    }
+
+    private void testLoginCookie(ResponseEntity<String> response) {
+        List<String> cookieTokens = response.getHeaders().get("set-cookie");
+        assertThat(cookieTokens).hasSize(1);
+        String tokenCookieContent = cookieTokens.getFirst();
+        System.out.println(tokenCookieContent);
+        var cookieParts = tokenCookieContent.split("; ");
+        assertThat(cookieParts.length).isGreaterThanOrEqualTo(3);
+        assertThat(cookieParts).contains("Max-Age=3600", "HttpOnly");
+        assertThat(cookieParts[0]).matches("token=" + JWT_REGEXP_PATTERN);
     }
 
     @Test
