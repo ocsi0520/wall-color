@@ -1,17 +1,13 @@
 package com.my_wall_color.color_manager.security;
 
 import com.my_wall_color.color_manager.adapter.JpaColor;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import com.my_wall_color.test_utils.PostgresContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.List;
 
@@ -21,29 +17,8 @@ record LoginRequest(String username, String password) {
 }
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AuthenticationControllerTest {
+class AuthenticationControllerTest implements PostgresContainerTest {
     private static final String JWT_REGEXP_PATTERN = "((?:\\.?(?:[A-Za-z0-9-_]+)){3})";
-
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            "postgres:18-alpine"
-    );
-
-    @DynamicPropertySource
-    static void setProps(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-        postgres.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
-    }
 
     @Autowired
     private TestRestTemplate restTemplate;
