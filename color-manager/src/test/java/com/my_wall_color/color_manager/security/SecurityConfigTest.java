@@ -10,7 +10,7 @@ import org.springframework.http.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SecurityConfigTest implements PostgresContainerTest {
+class SecurityConfigTest extends PostgresContainerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

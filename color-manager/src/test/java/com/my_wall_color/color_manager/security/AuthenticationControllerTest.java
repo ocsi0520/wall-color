@@ -8,14 +8,35 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AuthenticationControllerTest implements PostgresContainerTest {
+@Testcontainers
+class AuthenticationControllerTest {
     private static final String JWT_REGEXP_PATTERN = "((?:\\.?(?:[A-Za-z0-9-_]+)){3})";
+
+    // TODO: de-duplicate with PostgresContainerTest, in case using it currently ending up w/
+    //  HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6f0df74 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+    @Container
+    protected static final PostgreSQLContainer<?> postgres =
+            new PostgreSQLContainer<>("postgres:18-alpine")
+                    .withReuse(true);
+
+    @DynamicPropertySource
+    static void configure(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
 
     @Autowired
     private TestRestTemplate restTemplate;
