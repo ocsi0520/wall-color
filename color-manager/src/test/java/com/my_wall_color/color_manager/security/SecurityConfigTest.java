@@ -1,16 +1,16 @@
 package com.my_wall_color.color_manager.security;
 
+import com.my_wall_color.test_utils.PostgresContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SecurityConfigTest {
+class SecurityConfigTest implements PostgresContainerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -23,9 +23,21 @@ class SecurityConfigTest {
 
     @Test
     void shouldReturnString() {
-        ResponseEntity<String> response =
-            restTemplate.withBasicAuth("jdoe", "user1").getForEntity("/api/asd", String.class);
+        HttpEntity<String> entity = getHttpEntityWith(retrieveToken());
+        ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).isEqualTo("asd");
+    }
+
+    private String retrieveToken() {
+        LoginRequest loginRequest = new LoginRequest("jdoe", "user1");
+        ResponseEntity<String> tokenResponse = restTemplate.postForEntity("/api/auth/login", loginRequest, String.class);
+        return tokenResponse.getBody();
+    }
+
+    private <T> HttpEntity<T> getHttpEntityWith(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        return new HttpEntity<T>(headers);
     }
 }
