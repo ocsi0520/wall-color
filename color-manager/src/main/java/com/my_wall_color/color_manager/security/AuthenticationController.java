@@ -7,18 +7,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.time.Clock;
+import java.time.Instant;
 
 @RestController
 @RequestMapping("/api")
 public class AuthenticationController {
-    private AuthenticationManager manager;
+    private final AuthenticationManager manager;
+    private final TokenService tokenService;
+    private final Clock clock;
 
-    private TokenService tokenService;
-
-    public AuthenticationController(AuthenticationManager manager, TokenService tokenService) {
+    public AuthenticationController(AuthenticationManager manager, TokenService tokenService, Clock clock) {
         this.manager = manager;
         this.tokenService = tokenService;
+        this.clock = clock;
     }
 
     @PostMapping("/public")
@@ -28,8 +30,6 @@ public class AuthenticationController {
         return "Hello World";
     }
 
-    // TODO: alter SecurityFilter to read token from cookie instead of Authorization header
-    // then return the expires in the body so the frontend knows when to login again
     @PostMapping("/auth/login")
     public String login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         Authentication auth = manager.authenticate(
@@ -37,7 +37,7 @@ public class AuthenticationController {
         TokenResult tokenResult = tokenService.generateToken(auth);
         response.addCookie(createTokenCookieFrom(tokenResult));
 
-        return tokenResult.token();
+        return Instant.now(clock).plus(tokenResult.maxAge()).toString();
     }
 
     // TODO: set domain, probably from env
