@@ -14,4 +14,10 @@ public class DummyController {
     public String bla() {
         return "asd";
     }
+
+    @PostMapping("/public")
+    public String handlePublic() {
+        System.out.println("Hello World");
+        return "Hello World";
+    }
 }

@@ -23,13 +23,6 @@ public class AuthenticationController {
         this.clock = clock;
     }
 
-    @PostMapping("/public")
-    // TODO: remove
-    public String handlePublic() {
-        System.out.println("Hello World");
-        return "Hello World";
-    }
-
     @PostMapping("/auth/login")
     public String login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         Authentication auth = manager.authenticate(

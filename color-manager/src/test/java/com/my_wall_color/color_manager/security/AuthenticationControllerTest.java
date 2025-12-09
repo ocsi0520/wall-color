@@ -48,13 +48,6 @@ class AuthenticationControllerTest {
     private Clock clock;
 
     @Test
-    void reachPublicEndpoint() {
-        var response = restTemplate.postForEntity("/api/public", null, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("Hello World");
-    }
-
-    @Test
     void loginWithCredentials() {
         LoginRequest loginRequest = new LoginRequest("jdoe", "user1");
 
