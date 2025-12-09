@@ -19,17 +19,38 @@ class SecurityConfigTest extends PostgresContainerTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    void shouldReturnUnauthenticated() {
+    void shouldReturnUnauthenticatedForApiCall() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/asd", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
-    void shouldReturnString() {
+    void shouldSucceedApiCall() {
         HttpEntity<String> entity = getHttpEntityWith(retrieveToken());
         ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo("asd");
+    }
+
+    @Test
+    void shouldFetchStaticFile() {
+        var iconResponse = restTemplate.getForEntity("/favicon.ico", String.class);
+        assertThat(iconResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(iconResponse.getHeaders().getContentType().getType()).isEqualTo("image");
+    }
+
+    @Test
+    void shouldFetchFrontendFromRoot() {
+        var rootResponse = restTemplate.getForEntity("/", String.class);
+        assertThat(rootResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(rootResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
+    }
+
+    @Test
+    void shouldFetchFrontendWithRoute() {
+        var frontendRouteResponse = restTemplate.getForEntity("/dummy/route", String.class);
+        assertThat(frontendRouteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(frontendRouteResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
     }
 
     private String retrieveToken() {

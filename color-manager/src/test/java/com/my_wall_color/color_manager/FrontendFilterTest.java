@@ -15,7 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+// TODO: maybe we don't need a separate NoContextTestApp
+//  these can be tested w/ production SecurityFilterChain
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = com.my_wall_color.test_utils.NoContextTestApp.class,
