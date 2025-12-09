@@ -29,7 +29,7 @@ class FrontendFilterTest {
     TestRestTemplate restTemplate;
 
     @TestConfiguration
-    @Import({BasicController.class, FrontendFilter.class})
+    @Import({DummyController.class, FrontendFilter.class})
     static class TestConfig {
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
