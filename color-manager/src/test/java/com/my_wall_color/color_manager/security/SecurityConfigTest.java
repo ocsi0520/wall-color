@@ -1,5 +1,6 @@
 package com.my_wall_color.color_manager.security;
 
+import com.my_wall_color.color_manager.AuthHeaderRetriever;
 import com.my_wall_color.test_utils.PostgresContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,16 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
-import java.util.List;
-
-import static com.my_wall_color.color_manager.security.CookieBearerTokenResolver.TOKEN_COOKIE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SecurityConfigTest extends PostgresContainerTest {
+class SecurityConfigTest extends PostgresContainerTest implements AuthHeaderRetriever {
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    TestRestTemplate restTemplate;
 
     @Test
     void shouldReturnUnauthenticatedForApiCall() {
@@ -26,7 +24,7 @@ class SecurityConfigTest extends PostgresContainerTest {
 
     @Test
     void shouldSucceedApiCall() {
-        HttpEntity<String> entity = getHttpEntityWith(retrieveToken());
+        var entity = new HttpEntity<>(getAuthIncludedHeadersWith(restTemplate));
         ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo("asd");
@@ -51,24 +49,5 @@ class SecurityConfigTest extends PostgresContainerTest {
         var frontendRouteResponse = restTemplate.getForEntity("/dummy/route", String.class);
         assertThat(frontendRouteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(frontendRouteResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
-    }
-
-    private String retrieveToken() {
-        LoginRequest loginRequest = new LoginRequest("jdoe", "user1");
-        ResponseEntity<String> tokenResponse = restTemplate.postForEntity("/api/auth/login", loginRequest, String.class);
-
-        List<String> cookies = tokenResponse.getHeaders().get(HttpHeaders.SET_COOKIE);
-
-        return cookies.stream()
-                        .filter(c -> c.startsWith(TOKEN_COOKIE_NAME))
-                        .map(c -> c.substring(TOKEN_COOKIE_NAME.length() + 1, c.contains(";") ? c.indexOf(';') : c.length()))
-                        .findFirst()
-                        .orElse(null);
-    }
-
-    private <T> HttpEntity<T> getHttpEntityWith(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("cookie", TOKEN_COOKIE_NAME + '=' + token);
-        return new HttpEntity<T>(headers);
     }
 }
