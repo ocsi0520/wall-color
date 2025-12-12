@@ -10,13 +10,16 @@ import org.springframework.http.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class FrontendFilterTest extends PostgresContainerTest implements AuthHeaderRetriever {
+class FrontendFilterTest extends PostgresContainerTest {
     @Autowired
     TestRestTemplate restTemplate;
 
+    @Autowired
+    AuthTestHelper authTestHelper;
+
     @Test
     void shouldNotReturnHTMLForApi() {
-        var entity = new HttpEntity<>(getAuthIncludedHeadersWith(restTemplate));
+        var entity = new HttpEntity<>(authTestHelper.getValidAuthIncludedHeaders());
         ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isFalse();
