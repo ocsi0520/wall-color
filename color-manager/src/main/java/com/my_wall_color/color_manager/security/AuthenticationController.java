@@ -35,7 +35,7 @@ public class AuthenticationController {
 
     // TODO: set domain, probably from env
     private Cookie createTokenCookieFrom(TokenResult tokenResult) {
-        Cookie tokenCookie = new Cookie("token", tokenResult.token());
+        Cookie tokenCookie = new Cookie(CookieBearerTokenResolver.TOKEN_COOKIE_NAME, tokenResult.token());
         tokenCookie.setHttpOnly(true);
         tokenCookie.setMaxAge((int) tokenResult.maxAge().toSeconds());
         return tokenCookie;
