@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -17,7 +18,9 @@ import java.util.List;
 import static com.my_wall_color.color_manager.security.CookieBearerTokenResolver.TOKEN_COOKIE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
+// "Cookies do not provide isolation by port." https://stackoverflow.com/a/16328399
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties = "token.cookie.domain=mozilla.org")
 class AuthenticationControllerTest extends PostgresContainerTest {
     private static final String JWT_REGEXP_PATTERN = "((?:\\.?(?:[A-Za-z0-9-_]+)){3})";
     private static final int EXPECTED_MAX_AGE_IN_SECONDS = 3600;
@@ -57,7 +60,7 @@ class AuthenticationControllerTest extends PostgresContainerTest {
 
         var cookieParts = tokenCookieContent.split("; ");
         assertThat(cookieParts.length).isGreaterThanOrEqualTo(3);
-        assertThat(cookieParts).contains("Max-Age=" + EXPECTED_MAX_AGE_IN_SECONDS, "HttpOnly");
+        assertThat(cookieParts).contains("Max-Age=" + EXPECTED_MAX_AGE_IN_SECONDS, "HttpOnly", "Domain=mozilla.org");
         assertThat(cookieParts[0]).matches(TOKEN_COOKIE_NAME + '=' + JWT_REGEXP_PATTERN);
     }
 
