@@ -1,17 +1,13 @@
 package com.my_wall_color.color_manager.security;
 
 import com.my_wall_color.color_manager.adapter.JpaColor;
+import com.my_wall_color.test_utils.PostgresContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -22,24 +18,9 @@ import static com.my_wall_color.color_manager.security.CookieBearerTokenResolver
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
-class AuthenticationControllerTest {
+class AuthenticationControllerTest extends PostgresContainerTest {
     private static final String JWT_REGEXP_PATTERN = "((?:\\.?(?:[A-Za-z0-9-_]+)){3})";
     private static final int EXPECTED_MAX_AGE_IN_SECONDS = 3600;
-
-    // TODO: de-duplicate with PostgresContainerTest, in case using it currently ending up w/
-    //  HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6f0df74 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
-    @Container
-    protected static final PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>("postgres:18-alpine")
-                    .withReuse(true);
-
-    @DynamicPropertySource
-    static void configure(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
 
     @Autowired
     private TestRestTemplate restTemplate;
