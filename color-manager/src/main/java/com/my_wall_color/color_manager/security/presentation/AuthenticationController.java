@@ -1,5 +1,8 @@
-package com.my_wall_color.color_manager.security;
+package com.my_wall_color.color_manager.security.presentation;
 
+import com.my_wall_color.color_manager.security.token.CookieBearerTokenResolver;
+import com.my_wall_color.color_manager.security.token.TokenResult;
+import com.my_wall_color.color_manager.security.token.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;

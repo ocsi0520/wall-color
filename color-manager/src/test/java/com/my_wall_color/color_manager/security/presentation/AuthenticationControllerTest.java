@@ -1,4 +1,4 @@
-package com.my_wall_color.color_manager.security;
+package com.my_wall_color.color_manager.security.presentation;
 
 import com.my_wall_color.color_manager.AuthTestHelper;
 import com.my_wall_color.test_utils.PostgresContainerTest;
@@ -15,7 +15,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
-import static com.my_wall_color.color_manager.security.CookieBearerTokenResolver.TOKEN_COOKIE_NAME;
+import static com.my_wall_color.color_manager.security.token.CookieBearerTokenResolver.TOKEN_COOKIE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

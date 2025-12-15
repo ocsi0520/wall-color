@@ -1,6 +1,7 @@
 package com.my_wall_color.color_manager.security;
 
-import com.my_wall_color.color_manager.adapter.JpaUserRepository;
+import com.my_wall_color.color_manager.security.token.CookieBearerTokenResolver;
+import com.my_wall_color.color_manager.user.UserRepository;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -52,11 +53,11 @@ public class SecurityConfig {
                 .build();
     }
 
-    // TODO: make UserRepository -> UserRepositoryJpaAdapter -> JpaUserRepository
     @Bean
-    public UserDetailsService userDetailsService(JpaUserRepository userRepository) {
+    public UserDetailsService userDetailsService(UserRepository userRepository, UserDetailsMapper mapper) {
         return username -> userRepository
                 .findByUsername(username)
+                .map(mapper::fromDomain)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("user with username " + username + " not found!!")
                 );

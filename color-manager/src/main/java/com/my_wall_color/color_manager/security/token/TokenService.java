@@ -1,4 +1,4 @@
-package com.my_wall_color.color_manager.security;
+package com.my_wall_color.color_manager.security.token;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
