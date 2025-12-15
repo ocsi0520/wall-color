@@ -36,5 +36,6 @@ class ColorControllerTest extends PostgresContainerTest {
         var readColor = new ObjectMapper().readValue(response.getResponse().getContentAsString(), JpaColor.class);
         assertThat(readColor.getId()).isEqualTo(1L);
         assertThat(readColor.getName()).isEqualTo("Sulyom");
+        assertThat(readColor.getRecordedBy()).isEqualTo(1);
     }
 }

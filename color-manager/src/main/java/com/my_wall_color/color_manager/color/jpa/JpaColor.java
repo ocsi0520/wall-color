@@ -20,5 +20,5 @@ public class JpaColor {
     private short blue;
 
     private String name;
-    private Integer recorded_by;
+    private Integer recordedBy;
 }
