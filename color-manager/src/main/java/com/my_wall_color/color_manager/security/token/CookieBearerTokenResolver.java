@@ -1,4 +1,4 @@
-package com.my_wall_color.color_manager.security;
+package com.my_wall_color.color_manager.security.token;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

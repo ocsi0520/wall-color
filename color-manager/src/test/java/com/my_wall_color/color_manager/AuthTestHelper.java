@@ -1,6 +1,6 @@
 package com.my_wall_color.color_manager;
 
-import com.my_wall_color.color_manager.security.LoginRequest;
+import com.my_wall_color.color_manager.security.presentation.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Profile;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.my_wall_color.color_manager.security.CookieBearerTokenResolver.TOKEN_COOKIE_NAME;
+import static com.my_wall_color.color_manager.security.token.CookieBearerTokenResolver.TOKEN_COOKIE_NAME;
 
 @Component
 @Profile(TestProfile.NON_MVC)
