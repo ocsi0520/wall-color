@@ -1,6 +1,6 @@
 package com.my_wall_color.color_manager.security;
 
-import com.my_wall_color.color_manager.adapter.JpaUserRepository;
+import com.my_wall_color.color_manager.user.jpa.JpaUserRepository;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
