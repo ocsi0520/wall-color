@@ -1,5 +1,6 @@
 package com.my_wall_color.color_manager.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -16,11 +17,12 @@ import java.util.stream.Collectors;
 public class TokenService {
     private final JwtEncoder encoder;
     private final Clock clock;
-    private final Duration maxAge = Duration.ofHours(1);
+    private final Duration maxAge;
 
-    public TokenService(JwtEncoder encoder, Clock clock) {
+    public TokenService(JwtEncoder encoder, Clock clock, @Value("${token.max-age-seconds:3600}") int maxAgeInSeconds) {
         this.encoder = encoder;
         this.clock = clock;
+        this.maxAge = Duration.ofSeconds(maxAgeInSeconds);
     }
 
     public TokenResult generateToken(Authentication authentication) {

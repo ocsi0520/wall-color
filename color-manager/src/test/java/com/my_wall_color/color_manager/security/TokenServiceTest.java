@@ -25,17 +25,19 @@ import static org.mockito.Mockito.when;
 class TokenServiceTest {
     @Test
     void shouldReturnTokenAndExpiryDate() {
+        // given
         Clock clock = Mockito.mock(Clock.class);
         when(clock.instant()).thenReturn(Instant.parse("2015-10-21T08:28:17Z"));
         JwtEncoder encoder = Mockito.mock(JwtEncoder.class);
         Jwt encodingResult = Mockito.mock(Jwt.class);
+        int maxAgeInSeconds = 1800;
 
         ArgumentCaptor<JwtEncoderParameters> captor = ArgumentCaptor.forClass(JwtEncoderParameters.class);
 
         when(encoder.encode(any())).thenReturn(encodingResult);
         when(encodingResult.getTokenValue()).thenReturn("fake.jwt.token");
 
-        var unitUnderTest = new TokenService(encoder, clock);
+        var unitUnderTest = new TokenService(encoder, clock, maxAgeInSeconds);
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 "jdoe",
                 null,
@@ -45,13 +47,15 @@ class TokenServiceTest {
                 )
         );
 
+        // when
         TokenResult result = unitUnderTest.generateToken(auth);
 
+        // then
         verify(encoder).encode(captor.capture());
         var passedClaims = captor.getValue().getClaims();
 
         assertThat(result.token()).isEqualTo("fake.jwt.token");
-        assertThat(result.maxAge().toSeconds()).isEqualTo(3600L);
+        assertThat(result.maxAge().toSeconds()).isEqualTo(maxAgeInSeconds);
 
         assertThat(passedClaims.getClaimAsString("iss")).isEqualTo("self");
         assertThat(passedClaims.getSubject()).isEqualTo("jdoe");
