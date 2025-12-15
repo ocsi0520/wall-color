@@ -15,9 +15,9 @@ public class JpaColor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private short red;
-    private short green;
-    private short blue;
+    private Short red;
+    private Short green;
+    private Short blue;
 
     private String name;
     private Integer recordedBy;
