@@ -1,7 +1,8 @@
-package com.my_wall_color.color_manager;
+package com.my_wall_color.color_manager.color;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.my_wall_color.color_manager.adapter.JpaColor;
+import com.my_wall_color.color_manager.TestProfile;
+import com.my_wall_color.color_manager.color.jpa.JpaColor;
 import com.my_wall_color.test_utils.PostgresContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
