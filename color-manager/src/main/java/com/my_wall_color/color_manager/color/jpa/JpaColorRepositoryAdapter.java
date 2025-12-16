@@ -5,6 +5,7 @@ import com.my_wall_color.color_manager.color.ColorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,5 +17,10 @@ public class JpaColorRepositoryAdapter implements ColorRepository {
     @Override
     public Optional<Color> findById(Integer id) {
         return implementation.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public List<Color> findAllAssociatedWith(Integer userId) {
+        return implementation.findAllAssociatedColorForUser(userId).stream().map(mapper::toDomain).toList();
     }
 }
