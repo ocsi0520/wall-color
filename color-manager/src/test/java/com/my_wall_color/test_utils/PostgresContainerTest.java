@@ -10,6 +10,7 @@ import org.testcontainers.junit.jupiter.Container;
 
 @DirtiesContext
 @Testcontainers(parallel = true)
+// TODO: rename to IntegrationTest
 public abstract class PostgresContainerTest {
 
     @Container
