@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles(TestProfile.MVC)
+// TODO: when test fixture is done, use actual servlet with them instead of @WithMockUser and MVC
 class ColorControllerTest extends PostgresContainerTest {
     @Autowired
     private MockMvc mockMvc;
