@@ -2,6 +2,7 @@ package com.my_wall_color.color_manager.security;
 
 import com.my_wall_color.color_manager.AuthTestHelper;
 import com.my_wall_color.color_manager.IntegrationTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,11 @@ class SecurityConfigIntegrationTest extends IntegrationTest {
 
     @Autowired
     AuthTestHelper authTestHelper;
+
+    @BeforeEach
+    void injectFixtures() {
+        userFixture.injectAll();
+    }
 
     @Test
     void shouldReturnUnauthenticatedForApiCallWithoutToken() {

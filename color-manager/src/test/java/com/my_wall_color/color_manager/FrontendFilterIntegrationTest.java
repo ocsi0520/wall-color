@@ -1,5 +1,6 @@
 package com.my_wall_color.color_manager;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,11 @@ class FrontendFilterIntegrationTest extends IntegrationTest {
 
     @Autowired
     AuthTestHelper authTestHelper;
+
+    @BeforeEach
+    void injectFixtures() {
+        userFixture.injectAll();
+    }
 
     @Test
     void shouldNotReturnHTMLForApi() {
