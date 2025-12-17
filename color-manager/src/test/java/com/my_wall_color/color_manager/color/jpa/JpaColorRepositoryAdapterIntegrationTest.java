@@ -20,7 +20,7 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
     Color sulyomColor = new Color(1, (short) 136, (short) 147, (short) 152, "Sulyom", 1);
 
     @Test
-    void shouldReturnSulyok() {
+    void shouldReturnSulyom() {
         assertThat(unitUnderTest.findById(1)).contains(sulyomColor);
     }
 

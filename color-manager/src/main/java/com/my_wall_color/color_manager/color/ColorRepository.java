@@ -6,4 +6,5 @@ import java.util.Optional;
 public interface ColorRepository {
     Optional<Color> findById(Integer id);
     List<Color> findAllAssociatedWith(Integer userId);
+    Color save(Color color);
 }

@@ -23,4 +23,12 @@ public class JpaColorRepositoryAdapter implements ColorRepository {
     public List<Color> findAllAssociatedWith(Integer userId) {
         return implementation.findAllAssociatedColorForUser(userId).stream().map(mapper::toDomain).toList();
     }
+
+    @Override
+    public Color save(Color color) {
+        var savableJpaColor = mapper.fromDomain(color);
+        var savedJpaColor = implementation.save(savableJpaColor);
+        var savedColor = mapper.toDomain(savedJpaColor);
+        return savedColor;
+    }
 }
