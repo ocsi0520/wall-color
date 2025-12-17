@@ -3,7 +3,7 @@ package com.my_wall_color.color_manager.color;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.my_wall_color.color_manager.TestProfile;
 import com.my_wall_color.color_manager.color.jpa.JpaColor;
-import com.my_wall_color.test_utils.PostgresContainerTest;
+import com.my_wall_color.test_utils.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles(TestProfile.MVC)
 // TODO: when test fixture is done, use actual servlet with them instead of @WithMockUser and MVC
-class ColorControllerTest extends PostgresContainerTest {
+class ColorControllerIntegrationTest extends IntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 

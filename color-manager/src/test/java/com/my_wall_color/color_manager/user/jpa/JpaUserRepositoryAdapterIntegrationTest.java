@@ -1,7 +1,7 @@
 package com.my_wall_color.color_manager.user.jpa;
 
 import com.my_wall_color.color_manager.user.User;
-import com.my_wall_color.test_utils.PostgresContainerTest;
+import com.my_wall_color.test_utils.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +11,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class JpaUserRepositoryAdapterTest extends PostgresContainerTest {
+class JpaUserRepositoryAdapterIntegrationTest extends IntegrationTest {
     @Autowired
     JpaUserRepositoryAdapter adapter;
 

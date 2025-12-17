@@ -1,7 +1,7 @@
 package com.my_wall_color.color_manager.security.presentation;
 
 import com.my_wall_color.color_manager.AuthTestHelper;
-import com.my_wall_color.test_utils.PostgresContainerTest;
+import com.my_wall_color.test_utils.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "token.cookie.domain=mozilla.org")
-class AuthenticationControllerTest extends PostgresContainerTest {
+class AuthenticationControllerIntegrationTest extends IntegrationTest {
     private static final String JWT_REGEXP_PATTERN = "((?:\\.?(?:[A-Za-z0-9-_]+)){3})";
 
     @Value("${token.max-age-seconds}")
