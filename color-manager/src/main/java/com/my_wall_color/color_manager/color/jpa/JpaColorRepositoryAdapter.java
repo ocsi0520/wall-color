@@ -2,6 +2,9 @@ package com.my_wall_color.color_manager.color.jpa;
 
 import com.my_wall_color.color_manager.color.Color;
 import com.my_wall_color.color_manager.color.ColorRepository;
+import com.my_wall_color.color_manager.color.jpa.user_join.ColorUserJoinKey;
+import com.my_wall_color.color_manager.color.jpa.user_join.JpaColorUserJoin;
+import com.my_wall_color.color_manager.color.jpa.user_join.JpaColorUserJoinRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +15,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class JpaColorRepositoryAdapter implements ColorRepository {
     private final JpaColorRepository implementation;
+    private final JpaColorUserJoinRepository joinRepository;
     private final JpaColorMapper mapper;
 
     @Override
@@ -31,4 +35,10 @@ public class JpaColorRepositoryAdapter implements ColorRepository {
         var savedColor = mapper.toDomain(savedJpaColor);
         return savedColor;
     }
+
+    @Override
+    public void assignToUser(Color color, Integer userId) {
+        joinRepository.save(new JpaColorUserJoin(new ColorUserJoinKey(userId, color.getId())));
+    }
+
 }
