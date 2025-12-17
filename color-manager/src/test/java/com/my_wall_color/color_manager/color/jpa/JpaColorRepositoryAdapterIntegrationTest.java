@@ -3,6 +3,7 @@ package com.my_wall_color.color_manager.color.jpa;
 
 import com.my_wall_color.color_manager.color.Color;
 import com.my_wall_color.color_manager.IntegrationTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,31 +17,30 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
     @Autowired
     private JpaColorRepositoryAdapter unitUnderTest;
 
-    // TODO: fixture
-    Color sulyomColor = new Color(1, (short) 136, (short) 147, (short) 152, "Sulyom", 1);
+    @BeforeEach
+    void injectFixtures() {
+        userFixture.injectAll();
+        colorFixture.injectAll(userFixture);
+    }
 
     @Test
     void shouldReturnSulyom() {
-        assertThat(unitUnderTest.findById(1)).contains(sulyomColor);
+        assertThat(unitUnderTest.findById(colorFixture.sulyom.getId())).contains(colorFixture.sulyom);
     }
 
     @Test
     void shouldReturnEmptyColor() {
-        assertThat(unitUnderTest.findById(9999)).isEmpty();
+        assertThat(unitUnderTest.findById(colorFixture.nonExistent.getId())).isEmpty();
     }
 
     @Test
     void shouldReturnEmptyColorList() {
-        assertThat(unitUnderTest.findAllAssociatedWith(9999)).isEmpty();
+        assertThat(unitUnderTest.findAllAssociatedWith(userFixture.nonExistent.getId())).isEmpty();
     }
 
     @Test
     void shouldReturn3ColorsForJdoeUser() {
-        List<Color> colorsForJdoeUser = unitUnderTest.findAllAssociatedWith(1);
-        assertThat(colorsForJdoeUser).hasSize(4);
-        assertThat(colorsForJdoeUser.get(0)).isEqualTo(sulyomColor);
-        assertThat(colorsForJdoeUser.get(1).getName()).isEqualTo("Brazil menta");
-        assertThat(colorsForJdoeUser.get(2).getName()).isEqualTo("Havasi eukaliptusz");
-        assertThat(colorsForJdoeUser.get(3).getName()).isEqualTo("Szarkaláb");
+        List<Color> colorsForJdoeUser = unitUnderTest.findAllAssociatedWith(userFixture.jdoe.getId());
+        assertThat(colorsForJdoeUser).isEqualTo(List.of(colorFixture.sulyom, colorFixture.havasiGyopar));
     }
 }
