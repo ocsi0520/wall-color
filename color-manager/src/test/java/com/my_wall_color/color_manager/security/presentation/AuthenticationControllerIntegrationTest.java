@@ -2,6 +2,7 @@ package com.my_wall_color.color_manager.security.presentation;
 
 import com.my_wall_color.color_manager.AuthTestHelper;
 import com.my_wall_color.color_manager.IntegrationTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,11 @@ class AuthenticationControllerIntegrationTest extends IntegrationTest {
 
     @Autowired
     private Clock clock;
+
+    @BeforeEach
+    void injectUsers() {
+        userFixture.injectAll();
+    }
 
     @Test
     void shouldHandleLoginWithInvalidCredentials() {
