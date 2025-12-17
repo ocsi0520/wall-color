@@ -2,6 +2,7 @@ package com.my_wall_color.color_manager.color;
 
 import com.my_wall_color.color_manager.user.User;
 import com.my_wall_color.color_manager.user.UserFixture;
+import com.my_wall_color.color_manager.user.jpa.JpaUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,17 @@ public class ColorFixture {
         if (isInjectedAlready) return;
         isInjectedAlready = true;
 
+        injectColors(userFixture);
+        assignColorsToUsers(userFixture);
+    }
+
+    private void assignColorsToUsers(UserFixture userFixture) {
+        repository.assignToUser(sulyom, userFixture.jdoe.getId());
+        repository.assignToUser(havasiGyopar, userFixture.jdoe.getId());
+        repository.assignToUser(palastfu, userFixture.donna.getId());
+    }
+
+    private void injectColors(UserFixture userFixture) {
         sulyom = injectColorWithRecorder(sulyom, userFixture.jdoe);
         brazilMenta = injectColorWithRecorder(brazilMenta, userFixture.jdoe);
         kekSzelloRozsa = injectColorWithRecorder(kekSzelloRozsa, userFixture.jdoe);
