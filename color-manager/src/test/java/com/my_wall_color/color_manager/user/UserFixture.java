@@ -3,6 +3,8 @@ package com.my_wall_color.color_manager.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class UserFixture {
     @Autowired
@@ -17,7 +19,18 @@ public class UserFixture {
     // pw user3
     public User alex = new User(null, "alex", "$2a$12$y1ZToAjRAP.yor.J5lY8/uHwB2w1wFJ/CxhbU1V.9cyRezcC2sS2i", "Alex Scrowatz");
     // pw non-existent
-    public User nonExistent = new User(9999, "non-existent", "$2a$12$BIYHduo6AJy8a9bbn.urmOU9sgub5XMTmEyCTbT.z5/GJ5EzaXOd6", "non-existent");
+    public User nonExistent = new User(null, "non-existent", "$2a$12$BIYHduo6AJy8a9bbn.urmOU9sgub5XMTmEyCTbT.z5/GJ5EzaXOd6", "non-existent");
+
+    private final Map<String, String> passwordTable = Map.of(
+            jdoe.getUsername(), "user1",
+            donna.getUsername(), "user2",
+            alex.getUsername(), "user3",
+            nonExistent.getUsername(), "non-existent"
+    );
+
+    public String getPasswordFor(User user) {
+        return passwordTable.get(user.getUsername());
+    }
 
     public void injectAll() {
         if (isInjectedAlready) return;
@@ -25,7 +38,7 @@ public class UserFixture {
 
         // might be better to explicitly set ID sequence
         jdoe = userRepository.save(jdoe);
-        donna = userRepository.save(jdoe);
-        alex = userRepository.save(jdoe);
+        donna = userRepository.save(donna);
+        alex = userRepository.save(alex);
     }
 }

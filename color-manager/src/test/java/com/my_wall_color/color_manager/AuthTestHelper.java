@@ -1,6 +1,8 @@
 package com.my_wall_color.color_manager;
 
 import com.my_wall_color.color_manager.security.presentation.LoginRequest;
+import com.my_wall_color.color_manager.user.User;
+import com.my_wall_color.color_manager.user.UserFixture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Profile;
@@ -18,15 +20,20 @@ public class AuthTestHelper {
     private static final String JWT_FROM_JWT_IO = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30";
 
     @Autowired
+    UserFixture userFixture;
+
+    @Autowired
     TestRestTemplate restTemplate;
 
     public ResponseEntity<String> getSuccessAuthResponse() {
-        LoginRequest loginRequest = new LoginRequest("jdoe", "user1");
+        User jdoe = userFixture.jdoe;
+        LoginRequest loginRequest = new LoginRequest(jdoe.getUsername(), userFixture.getPasswordFor(jdoe));
         return restTemplate.postForEntity("/api/auth/login", loginRequest, String.class);
     }
 
     public ResponseEntity<Void> getWrongCredentialsAuthResponse() {
-        LoginRequest loginRequest = new LoginRequest("non-existent-user", "not-valid-password");
+        User nonExistent = userFixture.nonExistent;
+        LoginRequest loginRequest = new LoginRequest(nonExistent.getUsername(), userFixture.getPasswordFor(nonExistent));
         return restTemplate.postForEntity("/api/auth/login", loginRequest, Void.class);
     }
 
