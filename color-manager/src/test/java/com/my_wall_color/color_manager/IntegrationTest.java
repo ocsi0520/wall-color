@@ -1,4 +1,4 @@
-package com.my_wall_color.test_utils;
+package com.my_wall_color.color_manager;
 
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;

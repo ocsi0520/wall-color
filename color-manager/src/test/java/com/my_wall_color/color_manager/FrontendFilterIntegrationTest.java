@@ -1,6 +1,5 @@
 package com.my_wall_color.color_manager;
 
-import com.my_wall_color.test_utils.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
