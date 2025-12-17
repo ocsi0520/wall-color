@@ -19,7 +19,7 @@ public class UserFixture {
     // pw user3
     public User alex = new User(null, "alex", "$2a$12$y1ZToAjRAP.yor.J5lY8/uHwB2w1wFJ/CxhbU1V.9cyRezcC2sS2i", "Alex Scrowatz");
     // pw non-existent
-    public User nonExistent = new User(null, "non-existent", "$2a$12$BIYHduo6AJy8a9bbn.urmOU9sgub5XMTmEyCTbT.z5/GJ5EzaXOd6", "non-existent");
+    public User nonExistent = new User(9999, "non-existent", "$2a$12$BIYHduo6AJy8a9bbn.urmOU9sgub5XMTmEyCTbT.z5/GJ5EzaXOd6", "non-existent");
 
     private final Map<String, String> passwordTable = Map.of(
             jdoe.getUsername(), "user1",
