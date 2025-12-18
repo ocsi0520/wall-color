@@ -1,4 +1,4 @@
-package com.my_wall_color.color_manager.user.jpa;
+package com.my_wall_color.color_manager.user.adapter.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

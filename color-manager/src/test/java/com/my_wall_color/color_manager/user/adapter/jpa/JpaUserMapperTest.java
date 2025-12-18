@@ -1,6 +1,6 @@
-package com.my_wall_color.color_manager.user.jpa;
+package com.my_wall_color.color_manager.user.adapter.jpa;
 
-import com.my_wall_color.color_manager.user.User;
+import com.my_wall_color.color_manager.user.domain.User;
 import com.my_wall_color.color_manager.user.UserFixture;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;

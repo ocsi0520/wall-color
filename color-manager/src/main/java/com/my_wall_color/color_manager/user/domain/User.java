@@ -1,4 +1,4 @@
-package com.my_wall_color.color_manager.user;
+package com.my_wall_color.color_manager.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

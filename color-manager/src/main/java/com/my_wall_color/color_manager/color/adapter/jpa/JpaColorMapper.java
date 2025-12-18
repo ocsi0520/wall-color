@@ -1,6 +1,6 @@
-package com.my_wall_color.color_manager.color.jpa;
+package com.my_wall_color.color_manager.color.adapter.jpa;
 
-import com.my_wall_color.color_manager.color.Color;
+import com.my_wall_color.color_manager.color.domain.Color;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
