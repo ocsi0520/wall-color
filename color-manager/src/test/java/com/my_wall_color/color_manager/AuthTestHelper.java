@@ -5,7 +5,6 @@ import com.my_wall_color.color_manager.user.User;
 import com.my_wall_color.color_manager.user.UserFixture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -24,32 +23,26 @@ public class AuthTestHelper {
     @Autowired
     TestRestTemplate restTemplate;
 
-    public ResponseEntity<String> getSuccessAuthResponse() {
-        User jdoe = userFixture.jdoe;
-        LoginRequest loginRequest = new LoginRequest(jdoe.getUsername(), userFixture.getPasswordFor(jdoe));
-        return restTemplate.postForEntity("/api/auth/login", loginRequest, String.class);
-    }
-
-    public ResponseEntity<Void> getWrongCredentialsAuthResponse() {
-        User nonExistent = userFixture.nonExistent;
-        LoginRequest loginRequest = new LoginRequest(nonExistent.getUsername(), userFixture.getPasswordFor(nonExistent));
-        return restTemplate.postForEntity("/api/auth/login", loginRequest, Void.class);
-    }
-
     public HttpHeaders getInvalidAuthIncludedHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("cookie", TOKEN_COOKIE_NAME + '=' + JWT_FROM_JWT_IO);
         return headers;
     }
 
-    public HttpHeaders getValidAuthIncludedHeaders() {
+    public HttpHeaders getAuthIncludedHeadersFor(User user) {
+        var authResponse = getAuthResponseFor(user);
         HttpHeaders headers = new HttpHeaders();
-        headers.set("cookie", TOKEN_COOKIE_NAME + '=' + retrieveToken());
+        headers.set("cookie", TOKEN_COOKIE_NAME + '=' + retrieveTokenFrom(authResponse));
         return headers;
     }
 
-    private String retrieveToken() {
-        List<String> cookies = getSuccessAuthResponse().getHeaders().get(HttpHeaders.SET_COOKIE);
+    public ResponseEntity<String> getAuthResponseFor(User user) {
+        LoginRequest loginRequest = new LoginRequest(user.getUsername(), userFixture.getPasswordFor(user));
+        return restTemplate.postForEntity("/api/auth/login", loginRequest, String.class);
+    }
+
+    private String retrieveTokenFrom(ResponseEntity<?> response) {
+        List<String> cookies = response.getHeaders().get(HttpHeaders.SET_COOKIE);
 
         return cookies.stream()
                 .filter(c -> c.startsWith(TOKEN_COOKIE_NAME))

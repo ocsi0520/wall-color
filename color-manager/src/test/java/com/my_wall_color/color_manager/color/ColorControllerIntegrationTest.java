@@ -2,7 +2,6 @@ package com.my_wall_color.color_manager.color;
 
 import com.my_wall_color.color_manager.AuthTestHelper;
 import com.my_wall_color.color_manager.IntegrationTest;
-import com.my_wall_color.color_manager.user.UserFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +27,14 @@ class ColorControllerIntegrationTest extends IntegrationTest {
 
     @Test
     public void shouldReturnNotFound() {
-        var entity = new HttpEntity<>(authTestHelper.getValidAuthIncludedHeaders());
+        var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
         ResponseEntity<Color> response = restTemplate.exchange("/api/color/" + colorFixture.nonExistent.getId(), HttpMethod.GET, entity, Color.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     public void shouldReturnSulyomColor() {
-        var entity = new HttpEntity<>(authTestHelper.getValidAuthIncludedHeaders());
+        var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
         ResponseEntity<Color> response = restTemplate.exchange("/api/color/" + colorFixture.sulyom.getId(), HttpMethod.GET, entity, Color.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(colorFixture.sulyom);

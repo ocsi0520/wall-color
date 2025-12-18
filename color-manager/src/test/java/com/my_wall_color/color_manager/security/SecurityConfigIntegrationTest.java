@@ -41,7 +41,7 @@ class SecurityConfigIntegrationTest extends IntegrationTest {
 
     @Test
     void shouldSucceedApiCallWithCorrectToken() {
-        var invalidAuthIncludedHeaders = authTestHelper.getValidAuthIncludedHeaders();
+        var invalidAuthIncludedHeaders = authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe);
         var entity = new HttpEntity<>(invalidAuthIncludedHeaders);
         ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

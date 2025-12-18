@@ -24,7 +24,7 @@ class FrontendFilterIntegrationTest extends IntegrationTest {
 
     @Test
     void shouldNotReturnHTMLForApi() {
-        var entity = new HttpEntity<>(authTestHelper.getValidAuthIncludedHeaders());
+        var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
         ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isFalse();

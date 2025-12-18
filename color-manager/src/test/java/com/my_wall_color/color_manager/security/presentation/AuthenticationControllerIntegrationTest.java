@@ -40,13 +40,13 @@ class AuthenticationControllerIntegrationTest extends IntegrationTest {
 
     @Test
     void shouldHandleLoginWithInvalidCredentials() {
-        ResponseEntity<Void> response = authTestHelper.getWrongCredentialsAuthResponse();
+        var response = authTestHelper.getAuthResponseFor(userFixture.nonExistent);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     void shouldHandleLoginWithValidCredentials() {
-        ResponseEntity<String> response = authTestHelper.getSuccessAuthResponse();
+        ResponseEntity<String> response = authTestHelper.getAuthResponseFor(userFixture.jdoe);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         verifyLoginCookie(response);
