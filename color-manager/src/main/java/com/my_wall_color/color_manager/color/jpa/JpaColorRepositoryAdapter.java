@@ -25,7 +25,7 @@ public class JpaColorRepositoryAdapter implements ColorRepository {
 
     @Override
     public List<Color> findAllAssociatedWith(Integer userId) {
-        return implementation.findAllAssociatedColorForUser(userId).stream().map(mapper::toDomain).toList();
+        return joinRepository.findAllAssociatedColorForUser(userId).stream().map(mapper::toDomain).toList();
     }
 
     @Override
