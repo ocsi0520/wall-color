@@ -1,7 +1,6 @@
-package com.my_wall_color.color_manager.security;
+package com.my_wall_color.color_manager;
 
-import com.my_wall_color.color_manager.AuthTestHelper;
-import com.my_wall_color.test_utils.PostgresContainerTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,55 +10,58 @@ import org.springframework.http.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SecurityConfigTest extends PostgresContainerTest {
-
+class FrontendFilterIntegrationTest extends IntegrationTest {
     @Autowired
     TestRestTemplate restTemplate;
 
     @Autowired
     AuthTestHelper authTestHelper;
 
-    @Test
-    void shouldReturnUnauthenticatedForApiCallWithoutToken() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/api/asd", String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    @BeforeEach
+    void injectFixtures() {
+        userFixture.injectAll();
     }
 
     @Test
-    void shouldReturnUnauthenticatedForApiCallWithWrongToken() {
-        var invalidAuthIncludedHeaders = authTestHelper.getInvalidAuthIncludedHeaders();
-        var entity = new HttpEntity<>(invalidAuthIncludedHeaders);
-        ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-    }
-
-    @Test
-    void shouldSucceedApiCallWithCorrectToken() {
-        var invalidAuthIncludedHeaders = authTestHelper.getValidAuthIncludedHeaders();
-        var entity = new HttpEntity<>(invalidAuthIncludedHeaders);
+    void shouldNotReturnHTMLForApi() {
+        var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
         ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("asd");
+        assertThat(response.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isFalse();
+        assertThat(response.getHeaders().getContentType().includes(MediaType.TEXT_PLAIN)).isTrue();
     }
 
     @Test
-    void shouldFetchStaticFileWithoutToken() {
+    void shouldNotReturnHTMLForStaticIcon() {
         var iconResponse = restTemplate.getForEntity("/favicon.ico", String.class);
         assertThat(iconResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(iconResponse.getHeaders().getContentType().getType()).isEqualTo("image");
     }
 
     @Test
-    void shouldFetchFrontendFromRootWithoutToken() {
+    void shouldReturnHTMLForRoot() {
         var rootResponse = restTemplate.getForEntity("/", String.class);
         assertThat(rootResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(rootResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
     }
 
     @Test
-    void shouldFetchFrontendWithRouteWithoutToken() {
+    void shouldReturnHTMLForIndexRoute() {
+        var indexResponse = restTemplate.getForEntity("/index.html", String.class);
+        assertThat(indexResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(indexResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
+    }
+
+    @Test
+    void shouldReturnHTMLForFrontendRoute() {
         var frontendRouteResponse = restTemplate.getForEntity("/dummy/route", String.class);
         assertThat(frontendRouteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(frontendRouteResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
+    }
+
+    @Test
+    void shouldNotReturnHTMLForNonExistentResource() {
+        var nonExistentResourceResponse = restTemplate.getForEntity("/dummy/route.jpg", String.class);
+        assertThat(nonExistentResourceResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
