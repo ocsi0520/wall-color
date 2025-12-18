@@ -12,13 +12,9 @@ public class UserFixture {
 
     private boolean isInjectedAlready = false;
 
-    // pw user1
     public User jdoe = new User(null, "jdoe", "$2a$12$/wnuwqCoou1NwfDGzAPTFOsDgbyIblbOyGp.8WRvPMYt/GWSn8XYy", "John Doe");
-    // pw user2
     public User donna = new User(null, "donna", "$2a$12$OhrUMXgjSnPXpGkiKkzwSeYkXPDI6IqhpM6/h6blyKE6lDhPPjLNa", "Donna Da Maria");
-    // pw user3
     public User alex = new User(null, "alex", "$2a$12$y1ZToAjRAP.yor.J5lY8/uHwB2w1wFJ/CxhbU1V.9cyRezcC2sS2i", "Alex Scrowatz");
-    // pw non-existent
     public User nonExistent = new User(9999, "non-existent", "$2a$12$BIYHduo6AJy8a9bbn.urmOU9sgub5XMTmEyCTbT.z5/GJ5EzaXOd6", "non-existent");
 
     private final Map<String, String> passwordTable = Map.of(
