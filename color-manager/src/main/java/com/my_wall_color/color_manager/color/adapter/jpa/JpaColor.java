@@ -1,4 +1,4 @@
-package com.my_wall_color.color_manager.color.jpa;
+package com.my_wall_color.color_manager.color.adapter.jpa;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,8 @@
-package com.my_wall_color.color_manager.color;
+package com.my_wall_color.color_manager.color.adapter.web;
 
 import com.my_wall_color.color_manager.AuthTestHelper;
 import com.my_wall_color.color_manager.IntegrationTest;
+import com.my_wall_color.color_manager.color.domain.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.my_wall_color.color_manager.color;
+package com.my_wall_color.color_manager.color.domain;
 
 import java.util.List;
 import java.util.Optional;

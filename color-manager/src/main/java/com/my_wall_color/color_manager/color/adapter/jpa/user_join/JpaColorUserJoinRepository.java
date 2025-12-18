@@ -1,6 +1,6 @@
-package com.my_wall_color.color_manager.color.jpa.user_join;
+package com.my_wall_color.color_manager.color.adapter.jpa.user_join;
 
-import com.my_wall_color.color_manager.color.jpa.JpaColor;
+import com.my_wall_color.color_manager.color.adapter.jpa.JpaColor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

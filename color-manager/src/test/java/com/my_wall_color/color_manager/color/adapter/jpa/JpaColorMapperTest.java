@@ -1,11 +1,12 @@
-package com.my_wall_color.color_manager.color.jpa;
+package com.my_wall_color.color_manager.color.adapter.jpa;
 
-import com.my_wall_color.color_manager.color.Color;
+import com.my_wall_color.color_manager.color.domain.Color;
+import com.my_wall_color.color_manager.color.adapter.jpa.JpaColor;
+import com.my_wall_color.color_manager.color.adapter.jpa.JpaColorMapper;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class JpaColorMapperTest {
     JpaColorMapper unitUnderTest = Mappers.getMapper(JpaColorMapper.class);

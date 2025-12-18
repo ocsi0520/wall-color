@@ -1,10 +1,10 @@
-package com.my_wall_color.color_manager.color.jpa;
+package com.my_wall_color.color_manager.color.adapter.jpa;
 
-import com.my_wall_color.color_manager.color.Color;
-import com.my_wall_color.color_manager.color.ColorRepository;
-import com.my_wall_color.color_manager.color.jpa.user_join.ColorUserJoinKey;
-import com.my_wall_color.color_manager.color.jpa.user_join.JpaColorUserJoin;
-import com.my_wall_color.color_manager.color.jpa.user_join.JpaColorUserJoinRepository;
+import com.my_wall_color.color_manager.color.domain.Color;
+import com.my_wall_color.color_manager.color.domain.ColorRepository;
+import com.my_wall_color.color_manager.color.adapter.jpa.user_join.ColorUserJoinKey;
+import com.my_wall_color.color_manager.color.adapter.jpa.user_join.JpaColorUserJoin;
+import com.my_wall_color.color_manager.color.adapter.jpa.user_join.JpaColorUserJoinRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
