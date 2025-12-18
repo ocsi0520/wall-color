@@ -1,8 +1,7 @@
 package com.my_wall_color.color_manager.color;
 
-import com.my_wall_color.color_manager.user.User;
+import com.my_wall_color.color_manager.user.domain.User;
 import com.my_wall_color.color_manager.user.UserFixture;
-import com.my_wall_color.color_manager.user.jpa.JpaUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

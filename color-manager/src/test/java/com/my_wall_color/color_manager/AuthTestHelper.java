@@ -1,7 +1,7 @@
 package com.my_wall_color.color_manager;
 
 import com.my_wall_color.color_manager.security.presentation.LoginRequest;
-import com.my_wall_color.color_manager.user.User;
+import com.my_wall_color.color_manager.user.domain.User;
 import com.my_wall_color.color_manager.user.UserFixture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;

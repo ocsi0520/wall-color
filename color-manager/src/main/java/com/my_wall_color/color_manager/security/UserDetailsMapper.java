@@ -1,6 +1,6 @@
 package com.my_wall_color.color_manager.security;
 
-import com.my_wall_color.color_manager.user.User;
+import com.my_wall_color.color_manager.user.domain.User;
 import org.mapstruct.Mapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
