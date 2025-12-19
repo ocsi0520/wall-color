@@ -1,19 +1,3 @@
-CREATE TABLE Color(
-    id SERIAL PRIMARY KEY,
-    red SMALLINT NOT NULL CHECK (
-        red BETWEEN 0 AND 255
-    ),
-    green SMALLINT NOT NULL CHECK (
-        green BETWEEN 0 AND 255
-    ),
-    blue SMALLINT NOT NULL CHECK (
-        blue BETWEEN 0 AND 255
-    ),
-    name VARCHAR(100),
-    recorded_by INTEGER REFERENCES App_User(id) ON DELETE
-    SET NULL,
-        CONSTRAINT unique_rgb UNIQUE (red, green, blue)
-);
 INSERT INTO Color (red, green, blue, name, recorded_by)
 VALUES (
         136,

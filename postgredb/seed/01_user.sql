@@ -1,11 +1,3 @@
-CREATE TABLE App_User(
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(60) NOT NULL,
-    -- https://stackoverflow.com/a/5882472
-    name VARCHAR(70) NOT NULL, -- https://stackoverflow.com/a/30509
-    is_admin boolean NOT NULL
-);
 INSERT INTO App_User(username, password, name, is_admin)
 VALUES (
         'jdoe',
