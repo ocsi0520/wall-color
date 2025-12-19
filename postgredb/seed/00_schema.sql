@@ -2,7 +2,8 @@ CREATE TABLE App_User(
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(60) NOT NULL,
-    name VARCHAR(70) NOT NULL
+    name VARCHAR(70) NOT NULL,
+    is_admin boolean NOT NULL
 );
 
 CREATE TABLE Color(
