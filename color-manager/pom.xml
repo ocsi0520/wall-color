@@ -127,6 +127,9 @@
                         -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
                         -Xshare:off
                     </argLine>
+                    <systemPropertyVariables>
+                        <project.basedir>${project.basedir}</project.basedir>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
