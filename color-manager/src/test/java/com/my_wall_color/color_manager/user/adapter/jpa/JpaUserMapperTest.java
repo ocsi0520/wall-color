@@ -19,6 +19,7 @@ class JpaUserMapperTest {
         assertThat(actual.getUsername()).isEqualTo(jdoeUser.getUsername());
         assertThat(actual.getPassword()).isEqualTo(jdoeUser.getPassword());
         assertThat(actual.getName()).isEqualTo(jdoeUser.getName());
+        assertThat(actual.getIsAdmin()).isEqualTo(jdoeUser.getIsAdmin());
     }
 
     @Test
@@ -26,7 +27,7 @@ class JpaUserMapperTest {
         var expectedUser = new UserFixture().jdoe;
         expectedUser.setId(971);
 
-        JpaUser jpaEntity = new JpaUser(expectedUser.getId(), expectedUser.getUsername(), expectedUser.getPassword(), expectedUser.getName());
+        JpaUser jpaEntity = new JpaUser(expectedUser.getId(), expectedUser.getUsername(), expectedUser.getPassword(), expectedUser.getName(), expectedUser.getIsAdmin());
         User actual = unitUnderTest.toDomain(jpaEntity);
         assertThat(actual).isEqualTo(expectedUser);
     }
