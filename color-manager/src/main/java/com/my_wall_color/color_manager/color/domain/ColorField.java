@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum ColorField implements FieldProvider {
-    NAME("name"), DEFAULT("id");
+    NAME("name"), ID("id");
     private String fieldName;
 
     @Override
