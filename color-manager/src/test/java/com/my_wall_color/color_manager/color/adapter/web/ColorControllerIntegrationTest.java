@@ -3,12 +3,16 @@ package com.my_wall_color.color_manager.color.adapter.web;
 import com.my_wall_color.color_manager.AuthTestHelper;
 import com.my_wall_color.color_manager.IntegrationTest;
 import com.my_wall_color.color_manager.color.domain.Color;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,5 +43,19 @@ class ColorControllerIntegrationTest extends IntegrationTest {
         ResponseEntity<Color> response = restTemplate.exchange("/api/color/" + colorFixture.sulyom.getId(), HttpMethod.GET, entity, Color.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(colorFixture.sulyom);
+    }
+
+    @Test
+    public void shouldReturnLast3ColorsByName() {
+        var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
+        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange("/api/color?page=0&size=3&sort=name,desc", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {});
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        var actual = response.getBody();
+        var expectedContent = List.of(colorFixture.szarkalab, colorFixture.sulyom, colorFixture.palastfu);
+        assertThat(actual.getTotalPages()).isEqualTo(3);
+        assertThat(actual.getSize()).isEqualTo(3);
+        assertThat(actual.getNumber()).isEqualTo(0);
+        assertThat(actual.getTotalElements()).isEqualTo(7);
+        assertThat(actual.getContent()).isEqualTo(expectedContent);
     }
 }
