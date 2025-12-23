@@ -10,5 +10,7 @@ import java.util.LinkedHashMap;
 public class SortAndPagination<AFieldProvider extends FieldProvider> {
     private int pageSize;
     private int pageIndex;
+    // TODO: switch to a Class which wraps AFieldProvider & isAscending
+    //  then make this field a Set
     private LinkedHashMap<AFieldProvider, Boolean> sorting;
 }
