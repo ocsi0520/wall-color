@@ -1,5 +1,6 @@
 package com.my_wall_color.color_manager.color.domain;
 
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public interface ColorRepository {
     List<Color> findAllAssociatedWith(Integer userId);
     Color save(Color color);
     void assignToUser(Color color, Integer userId);
-    Iterable<Color> findAll(SortAndPagination<ColorField> sortAndPagination);
+    PageDTO<Color> findAll(SortAndPagination<ColorField> sortAndPagination);
 }

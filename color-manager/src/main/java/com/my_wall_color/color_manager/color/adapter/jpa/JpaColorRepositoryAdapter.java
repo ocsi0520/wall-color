@@ -6,7 +6,9 @@ import com.my_wall_color.color_manager.color.domain.ColorRepository;
 import com.my_wall_color.color_manager.color.adapter.jpa.user_join.ColorUserJoinKey;
 import com.my_wall_color.color_manager.color.adapter.jpa.user_join.JpaColorUserJoin;
 import com.my_wall_color.color_manager.color.adapter.jpa.user_join.JpaColorUserJoinRepository;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.PageMapper;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.jpa.JpaSortAndPaginationMapper;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,7 @@ public class JpaColorRepositoryAdapter implements ColorRepository {
     private final JpaColorUserJoinRepository joinRepository;
     private final JpaColorMapper colorMapper;
     private final JpaSortAndPaginationMapper<ColorField> sapMapper;
+    private final PageMapper pageMapper;
 
     @Override
     public Optional<Color> findById(Integer id) {
@@ -48,10 +51,11 @@ public class JpaColorRepositoryAdapter implements ColorRepository {
     }
 
     @Override
-    public Iterable<Color> findAll(SortAndPagination<ColorField> sortAndPagination) {
+    public PageDTO<Color> findAll(SortAndPagination<ColorField> sortAndPagination) {
         Pageable mappedSap = sapMapper.map(sortAndPagination);
         Page<JpaColor> jpaColorPage = implementation.findAll(mappedSap);
-        return jpaColorPage.map(colorMapper::toDomain);
+        Page<Color> mappedContentPage = jpaColorPage.map(colorMapper::toDomain);
+        return pageMapper.toDomain(mappedContentPage);
     }
 
 }

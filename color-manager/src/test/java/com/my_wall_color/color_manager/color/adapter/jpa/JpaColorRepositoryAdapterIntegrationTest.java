@@ -48,10 +48,11 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
         assertThat(colorsForJdoeUser).isEqualTo(List.of(colorFixture.sulyom, colorFixture.havasiGyopar));
     }
 
+    // TODO: should test also page metadata (number, size, total elements)
     @Test
     void shouldReturnThirdAndFourthColor() {
         var actual = unitUnderTest.findAll(new SortAndPagination<>(2, 1, new LinkedHashMap<>()));
-        assertThat(actual).containsExactly(
+        assertThat(actual.getContent()).containsExactly(
                 colorFixture.kekSzelloRozsa,
                 colorFixture.szarkalab
         );
@@ -60,21 +61,21 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
     @Test
     void shouldReturnNothingDueToExceedingPageSize() {
         var actual = unitUnderTest.findAll(new SortAndPagination<>(5, 5, new LinkedHashMap<>()));
-        assertThat(actual).isEmpty();
+        assertThat(actual.getContent()).isEmpty();
     }
 
     @Test
     void shouldReturnFourthAndThirdColor() {
         var sort = new LinkedHashMap<>(Map.of(ColorField.NAME, false));
         var actual = unitUnderTest.findAll(new SortAndPagination<>(2, 1, sort));
-        assertThat(actual).containsExactly(colorFixture.palastfu, colorFixture.kekSzelloRozsa);
+        assertThat(actual.getContent()).containsExactly(colorFixture.palastfu, colorFixture.kekSzelloRozsa);
     }
 
     @Test
     void shouldReturnAllColorByReverse() {
         var sort = new LinkedHashMap<>(Map.of(ColorField.ID, false));
         var actual = unitUnderTest.findAll(new SortAndPagination<>(10, 0, sort));
-        assertThat(actual).containsExactly(
+        assertThat(actual.getContent()).containsExactly(
                 colorFixture.palastfu,
                 colorFixture.havasiEukaliptusz,
                 colorFixture.havasiGyopar,
