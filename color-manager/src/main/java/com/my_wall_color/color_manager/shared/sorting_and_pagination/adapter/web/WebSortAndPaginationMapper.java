@@ -39,6 +39,7 @@ public class WebSortAndPaginationMapper<F extends Enum<F> & FieldProvider> {
                                 (oldValue, newValue) -> newValue,
                                 LinkedHashMap::new
                         ));
+        // TODO: get a default ordering if (mappedSorting.isEmpty()) {}
 
 
         return new SortAndPagination<>(
