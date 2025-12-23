@@ -31,7 +31,7 @@ class JpaSortAndPaginationMapperTest {
 
     @Test
     void shouldHandleWithDefaultEnumToColumnMapper() {
-        var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(EnumToColumnMapper::provideEnumValue);
+        var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(EnumToColumnMapper.getEnumValueMapper());
         LinkedHashMap<TestTranslationEnum, Boolean> sorting = new LinkedHashMap<>();
         sorting.put(ONE, true);
         sorting.put(TWO, false);
@@ -67,7 +67,7 @@ class JpaSortAndPaginationMapperTest {
 
     @Test
     void shouldHandleEmptyHashMap() {
-        var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(EnumToColumnMapper::provideEnumValue);
+        var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(EnumToColumnMapper.getEnumValueMapper());
         LinkedHashMap<TestTranslationEnum, Boolean> sorting = new LinkedHashMap<>();
         SortAndPagination<TestTranslationEnum> sap = new SortAndPagination<>(5, 7, sorting);
         var actual = unitUnderTest.map(sap);

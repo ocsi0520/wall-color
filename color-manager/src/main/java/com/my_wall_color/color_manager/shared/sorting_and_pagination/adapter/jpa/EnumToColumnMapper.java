@@ -6,7 +6,7 @@ import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.Fiel
 public interface EnumToColumnMapper<F extends Enum<F> & FieldProvider> {
     String mapEnumToJpaColumn(F fieldEnum);
 
-    static <F extends Enum<F> & FieldProvider> String provideEnumValue(F fieldEnum) {
-        return fieldEnum.getFieldName();
+    static <F extends Enum<F> & FieldProvider> EnumToColumnMapper<F> getEnumValueMapper() {
+        return FieldProvider::getFieldName;
     }
 }
