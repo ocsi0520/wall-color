@@ -1,6 +1,5 @@
 package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.jpa;
 
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.FieldProvider;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrder;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
@@ -11,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JpaSortAndPaginationMapper<F extends Enum<F> & FieldProvider> {
+public class JpaSortAndPaginationMapper<F extends Enum<F>> {
     private final EnumToColumnMapper<F> enumToColumnMapper;
 
     public JpaSortAndPaginationMapper(EnumToColumnMapper<F> enumToColumnMapper) {

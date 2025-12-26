@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SortAndPagination<AFieldProvider extends Enum<AFieldProvider> & FieldProvider> {
+public class SortAndPagination<AFieldProvider extends Enum<AFieldProvider>> {
     private int pageSize;
     private int pageIndex;
     private SortOrderList<AFieldProvider> sorting;

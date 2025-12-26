@@ -9,35 +9,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.TestTranslationEnum;
+
 import static com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.TestTranslationEnum.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class JpaSortAndPaginationMapperTest {
+    EnumToColumnMapper<TestTranslationEnum> testTranslationEnumEnumToColumnMapper = enumValue -> switch (enumValue) {
+        case ONE -> "uno";
+        case TWO -> "dos";
+        case THREE -> "tres";
+    };
 
     @Test
-    void shouldHandleWithDefaultEnumToColumnMapper() {
-        var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(EnumToColumnMapper.getEnumValueMapper());
-        var sorting = SortOrderList.of(
-                new SortOrder<>(ONE, SortOrder.Direction.ASCENDING),
-                new SortOrder<>(TWO, SortOrder.Direction.DESCENDING),
-                new SortOrder<>(THREE, SortOrder.Direction.ASCENDING)
-        );
-        SortAndPagination<TestTranslationEnum> sap = new SortAndPagination<>(5, 7, sorting);
-        var actual = unitUnderTest.map(sap);
-        var expected = PageRequest.of(7, 5,
-                Sort.by(Order.asc("egy"), Order.desc("kettő"), Order.asc("három"))
-        );
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void shouldHandleWithCustomEnumToColumnMapper() {
+    void shouldHandleSimpleCase() {
         var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(
-                enumValue -> switch (enumValue) {
-                    case ONE -> "uno";
-                    case TWO -> "dos";
-                    case THREE -> "tres";
-                }
+                testTranslationEnumEnumToColumnMapper
         );
         var sorting = SortOrderList.of(
                 new SortOrder<>(ONE, SortOrder.Direction.ASCENDING),
@@ -55,7 +41,7 @@ class JpaSortAndPaginationMapperTest {
 
     @Test
     void shouldHandleEmptySortOrder() {
-        var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(EnumToColumnMapper.getEnumValueMapper());
+        var unitUnderTest = new JpaSortAndPaginationMapper<>(testTranslationEnumEnumToColumnMapper);
         SortOrderList<TestTranslationEnum> sorting = SortOrderList.of();
         SortAndPagination<TestTranslationEnum> sap = new SortAndPagination<>(5, 7, sorting);
         var actual = unitUnderTest.map(sap);

@@ -1,7 +1,6 @@
 package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.web;
 
 import com.my_wall_color.color_manager.color.domain.ColorField;
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.FieldProvider;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrder;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
@@ -10,13 +9,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class WebSortAndPaginationMapperTest {
     SortOrderList<ColorField> expectedDefaultSorting = SortOrderList.of(new SortOrder<>(ColorField.ID, SortOrder.Direction.ASCENDING));
+    SortOrderToEnumMapper<ColorField> toEnumMapper = (str) -> switch (str) {
+        case "id" -> Optional.of(ColorField.ID);
+        case "name" -> Optional.of(ColorField.NAME);
+        default -> Optional.empty();
+    };
 
-    private <T extends Enum<T> & FieldProvider> void testEqualityOfSAP(SortAndPagination<T> actual, SortAndPagination<T> expected) {
+    private <T extends Enum<T>> void testEqualityOfSAP(SortAndPagination<T> actual, SortAndPagination<T> expected) {
         assertThat(actual.getPageIndex()).isEqualTo(expected.getPageIndex());
         assertThat(actual.getPageSize()).isEqualTo(expected.getPageSize());
         assertThat(actual.getSorting().getOrderList()).isEqualTo(expected.getSorting().getOrderList());
@@ -24,7 +30,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithoutSortToDefault() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(1, 5);
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<>(5, 1, expectedDefaultSorting);
@@ -33,7 +39,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithOneValidOrder() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(2, 10,
                 Sort.by(new Sort.Order(Sort.Direction.DESC, "name"))
         );
@@ -46,7 +52,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithOneInvalidOrderToDefault() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(2, 10,
                 Sort.by(new Sort.Order(Sort.Direction.DESC, "non-existent-field"))
         );
@@ -57,7 +63,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithTwoValidOrdersToDefault() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(3, 30,
                 Sort.by(
                         new Sort.Order(Sort.Direction.ASC, "id"),
@@ -76,7 +82,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithOneValidAndOneInvalidOrder() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(3, 30,
                 Sort.by(
                         new Sort.Order(Sort.Direction.ASC, "non-existent"),
@@ -94,7 +100,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithTwoInvalidOrders() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(3, 30,
                 Sort.by(
                         new Sort.Order(Sort.Direction.ASC, "non-existent"),
@@ -108,23 +114,16 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldNotAcceptEmptyEnumClass() {
-        enum EmptyFieldProvider implements FieldProvider {
-            ;
+        enum EmptyFieldProvider {;}
 
-            @Override
-            public String getFieldName() {
-                return "";
-            }
-        }
-
-        assertThatThrownBy(() -> new WebSortAndPaginationMapper<>(EmptyFieldProvider.class))
+        assertThatThrownBy(() -> new WebSortAndPaginationMapper<>(EmptyFieldProvider.class, value -> Optional.empty()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Empty Enum");
     }
 
     @Test
     void shouldHandleExploitTryOnSort() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(100, 100,
                 Sort.by(
                         new Sort.Order(Sort.Direction.ASC, "non-existent"),

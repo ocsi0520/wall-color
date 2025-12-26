@@ -5,16 +5,16 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class SortOrderList<AFieldProvider extends Enum<AFieldProvider> & FieldProvider> {
+public class SortOrderList<AFieldProvider extends Enum<AFieldProvider>> {
     private final LinkedHashSet<SortOrder<AFieldProvider>> orderedList = new LinkedHashSet<>();
 
-    public static <AFieldProvider extends Enum<AFieldProvider> & FieldProvider> SortOrderList<AFieldProvider>
+    public static <AFieldProvider extends Enum<AFieldProvider>> SortOrderList<AFieldProvider>
     of(Collection<SortOrder<AFieldProvider>> sortOrders) {
         return new SortOrderList<>(sortOrders);
     }
 
     @SafeVarargs
-    public static <AFieldProvider extends Enum<AFieldProvider> & FieldProvider> SortOrderList<AFieldProvider>
+    public static <AFieldProvider extends Enum<AFieldProvider>> SortOrderList<AFieldProvider>
     of(SortOrder<AFieldProvider> ...sortOrders) {
         return of(Arrays.stream(sortOrders).toList());
     }
