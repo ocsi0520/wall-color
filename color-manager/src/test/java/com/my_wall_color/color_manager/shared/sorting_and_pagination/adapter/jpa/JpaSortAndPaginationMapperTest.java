@@ -1,31 +1,14 @@
 package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.jpa;
 
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.FieldProvider;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
-import java.util.LinkedHashMap;
-
-import static com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.jpa.TestTranslationEnum.*;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.TestTranslationEnum;
+import static com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.TestTranslationEnum.*;
 import static org.assertj.core.api.Assertions.assertThat;
-
-enum TestTranslationEnum implements FieldProvider {
-    ONE("egy"), TWO("kettő"), THREE("három");
-
-    private final String fieldName;
-
-    TestTranslationEnum(String fieldName) {
-        this.fieldName = fieldName;
-    }
-
-    @Override
-    public String getFieldName() {
-        return fieldName;
-    }
-}
 
 class JpaSortAndPaginationMapperTest {
 
