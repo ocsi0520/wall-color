@@ -116,4 +116,31 @@ class WebSortAndPaginationMapperTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Empty Enum");
     }
+
+    @Test
+    void shouldHandleExploitTryOnSort() {
+        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
+        Pageable pageRequestWithoutSort = PageRequest.of(100, 100,
+                Sort.by(
+                        new Sort.Order(Sort.Direction.ASC, "non-existent"),
+                        new Sort.Order(Sort.Direction.DESC, "name"),
+                        new Sort.Order(Sort.Direction.ASC, "name"),
+                        new Sort.Order(Sort.Direction.DESC, "non-existent"),
+                        new Sort.Order(Sort.Direction.ASC, "id"),
+                        new Sort.Order(Sort.Direction.DESC, "id"),
+                        new Sort.Order(Sort.Direction.DESC, "name"),
+                        new Sort.Order(Sort.Direction.ASC, "name"),
+                        new Sort.Order(Sort.Direction.ASC, "id"),
+                        new Sort.Order(Sort.Direction.DESC, "id")
+                )
+        );
+        var actual = unitUnderTest.map(pageRequestWithoutSort);
+        var expected = new SortAndPagination<>(100, 100,
+                new LinkedHashMap<>(Map.ofEntries(
+                        Map.entry(ColorField.NAME, true),
+                        Map.entry(ColorField.ID, false)
+                ))
+        );
+        assertThat(actual).isEqualTo(expected);
+    }
 }

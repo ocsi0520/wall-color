@@ -32,6 +32,7 @@ public class ColorController {
 
     @GetMapping
     private ResponseEntity<PageDTO<Color>> getAllColors(Pageable pageable) {
+        // TODO: this is a separate concern to normalize page requests
         var normalizedPageRequest = PageRequest.of(
                 Math.min(pageable.getPageNumber(), maxPageIndex),
                 pageable.getPageSize(),

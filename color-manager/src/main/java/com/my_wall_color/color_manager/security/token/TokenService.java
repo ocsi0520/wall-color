@@ -29,6 +29,7 @@ public class TokenService {
         Instant now = Instant.now(clock);
         Instant expiryTime = now.plus(maxAge);
         String scope = authentication.getAuthorities().stream()
+                // TODO: here we might have problems about SCOPE_ and ROLE_ prefixes
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
         JwtClaimsSet claims = JwtClaimsSet.builder()
