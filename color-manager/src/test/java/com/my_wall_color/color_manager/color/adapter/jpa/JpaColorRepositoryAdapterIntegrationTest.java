@@ -5,14 +5,14 @@ import com.my_wall_color.color_manager.color.domain.Color;
 import com.my_wall_color.color_manager.IntegrationTest;
 import com.my_wall_color.color_manager.color.domain.ColorField;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrder;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,36 +51,37 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
     // TODO: should test also page metadata (number, size, total elements)
     @Test
     void shouldReturnThirdAndFourthColor() {
-        var actual = unitUnderTest.findAll(new SortAndPagination<>(2, 1, new LinkedHashMap<>()));
+        var actual = unitUnderTest.findAll(new SortAndPagination<ColorField>(2, 1, SortOrderList.of()));
         assertThat(actual.getContent()).containsExactly(
-                colorFixture.kekSzelloRozsa,
+                colorFixture.havasiEukaliptusz,
                 colorFixture.szarkalab
         );
     }
 
     @Test
     void shouldReturnNothingDueToExceedingPageSize() {
-        var actual = unitUnderTest.findAll(new SortAndPagination<>(5, 5, new LinkedHashMap<>()));
+        var actual = unitUnderTest.findAll(new SortAndPagination<ColorField>(5, 5, SortOrderList.of()));
         assertThat(actual.getContent()).isEmpty();
     }
 
     @Test
     void shouldReturnFourthAndThirdColor() {
-        var sort = new LinkedHashMap<>(Map.of(ColorField.NAME, false));
+        var sort = SortOrderList.of(new SortOrder<>(ColorField.NAME, SortOrder.Direction.DESCENDING));
         var actual = unitUnderTest.findAll(new SortAndPagination<>(2, 1, sort));
         assertThat(actual.getContent()).containsExactly(colorFixture.palastfu, colorFixture.kekSzelloRozsa);
     }
 
     @Test
     void shouldReturnAllColorByReverse() {
-        var sort = new LinkedHashMap<>(Map.of(ColorField.ID, false));
+        var sort = SortOrderList.of(new SortOrder<>(ColorField.ID, SortOrder.Direction.DESCENDING));
         var actual = unitUnderTest.findAll(new SortAndPagination<>(10, 0, sort));
+
         assertThat(actual.getContent()).containsExactly(
                 colorFixture.palastfu,
-                colorFixture.havasiEukaliptusz,
+                colorFixture.kekSzelloRozsa,
                 colorFixture.havasiGyopar,
                 colorFixture.szarkalab,
-                colorFixture.kekSzelloRozsa,
+                colorFixture.havasiEukaliptusz,
                 colorFixture.brazilMenta,
                 colorFixture.sulyom
         );
