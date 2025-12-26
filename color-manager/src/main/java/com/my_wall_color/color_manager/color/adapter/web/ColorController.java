@@ -6,10 +6,10 @@ import com.my_wall_color.color_manager.color.domain.ColorRepository;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.web.WebSortAndPaginationMapper;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/color")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ColorController {
-    private ColorRepository colorRepository;
-    private WebSortAndPaginationMapper<ColorField> sortAndPaginationMapper;
+    private final ColorRepository colorRepository;
+    private final WebSortAndPaginationMapper<ColorField> sortAndPaginationMapper;
+    @Value("${spring.data.web.pageable.max-page-index}")
+    private Integer maxPageIndex;
 
     @GetMapping("/{id}")
     private ResponseEntity<Color> getColorById(@PathVariable int id) {
@@ -30,13 +32,12 @@ public class ColorController {
 
     @GetMapping
     private ResponseEntity<PageDTO<Color>> getAllColors(Pageable pageable) {
-        var pageRequest = PageRequest.of(
-                pageable.getPageNumber(),
+        var normalizedPageRequest = PageRequest.of(
+                Math.min(pageable.getPageNumber(), maxPageIndex),
                 pageable.getPageSize(),
-                // TODO: get rid of this and create default sorting in WebSortAndPaginationMapper
-                pageable.getSortOr(Sort.by(Sort.Order.asc("id")))
+                pageable.getSort()
         );
-        SortAndPagination<ColorField> SortAndPaginationInfo = sortAndPaginationMapper.map(pageRequest);
+        SortAndPagination<ColorField> SortAndPaginationInfo = sortAndPaginationMapper.map(normalizedPageRequest);
         PageDTO<Color> page = colorRepository.findAll(SortAndPaginationInfo);
         return ResponseEntity.ok(page);
     }
