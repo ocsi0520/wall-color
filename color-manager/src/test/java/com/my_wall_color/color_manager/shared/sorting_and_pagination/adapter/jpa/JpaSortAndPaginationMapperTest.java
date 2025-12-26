@@ -1,6 +1,8 @@
 package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.jpa;
 
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrder;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -15,10 +17,11 @@ class JpaSortAndPaginationMapperTest {
     @Test
     void shouldHandleWithDefaultEnumToColumnMapper() {
         var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(EnumToColumnMapper.getEnumValueMapper());
-        LinkedHashMap<TestTranslationEnum, Boolean> sorting = new LinkedHashMap<>();
-        sorting.put(ONE, true);
-        sorting.put(TWO, false);
-        sorting.put(THREE, true);
+        var sorting = SortOrderList.of(
+                new SortOrder<>(ONE, SortOrder.Direction.ASCENDING),
+                new SortOrder<>(TWO, SortOrder.Direction.DESCENDING),
+                new SortOrder<>(THREE, SortOrder.Direction.ASCENDING)
+        );
         SortAndPagination<TestTranslationEnum> sap = new SortAndPagination<>(5, 7, sorting);
         var actual = unitUnderTest.map(sap);
         var expected = PageRequest.of(7, 5,
@@ -36,10 +39,12 @@ class JpaSortAndPaginationMapperTest {
                     case THREE -> "tres";
                 }
         );
-        LinkedHashMap<TestTranslationEnum, Boolean> sorting = new LinkedHashMap<>();
-        sorting.put(ONE, true);
-        sorting.put(TWO, false);
-        sorting.put(THREE, true);
+        var sorting = SortOrderList.of(
+                new SortOrder<>(ONE, SortOrder.Direction.ASCENDING),
+                new SortOrder<>(TWO, SortOrder.Direction.DESCENDING),
+                new SortOrder<>(THREE, SortOrder.Direction.ASCENDING)
+        );
+
         SortAndPagination<TestTranslationEnum> sap = new SortAndPagination<>(5, 7, sorting);
         var actual = unitUnderTest.map(sap);
         var expected = PageRequest.of(7, 5,
@@ -49,9 +54,9 @@ class JpaSortAndPaginationMapperTest {
     }
 
     @Test
-    void shouldHandleEmptyHashMap() {
+    void shouldHandleEmptySortOrder() {
         var unitUnderTest = new JpaSortAndPaginationMapper<TestTranslationEnum>(EnumToColumnMapper.getEnumValueMapper());
-        LinkedHashMap<TestTranslationEnum, Boolean> sorting = new LinkedHashMap<>();
+        SortOrderList<TestTranslationEnum> sorting = SortOrderList.of();
         SortAndPagination<TestTranslationEnum> sap = new SortAndPagination<>(5, 7, sorting);
         var actual = unitUnderTest.map(sap);
         var expected = PageRequest.of(7, 5);
