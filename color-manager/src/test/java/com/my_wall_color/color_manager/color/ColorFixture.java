@@ -41,10 +41,10 @@ public class ColorFixture {
     private void injectColors(UserFixture userFixture) {
         sulyom = injectColorWithRecorder(sulyom, userFixture.jdoe);
         brazilMenta = injectColorWithRecorder(brazilMenta, userFixture.jdoe);
-        kekSzelloRozsa = injectColorWithRecorder(kekSzelloRozsa, userFixture.jdoe);
+        havasiEukaliptusz = injectColorWithRecorder(havasiEukaliptusz, userFixture.jdoe);
         szarkalab = injectColorWithRecorder(szarkalab, userFixture.donna);
         havasiGyopar = injectColorWithRecorder(havasiGyopar, userFixture.donna);
-        havasiEukaliptusz = injectColorWithRecorder(havasiEukaliptusz, userFixture.jdoe);
+        kekSzelloRozsa = injectColorWithRecorder(kekSzelloRozsa, userFixture.jdoe);
         palastfu = injectColorWithRecorder(palastfu, userFixture.jdoe);
     }
 
