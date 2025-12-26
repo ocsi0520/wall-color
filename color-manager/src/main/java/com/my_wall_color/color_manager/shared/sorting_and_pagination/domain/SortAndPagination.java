@@ -3,14 +3,10 @@ package com.my_wall_color.color_manager.shared.sorting_and_pagination.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.LinkedHashMap;
-
 @Data
 @AllArgsConstructor
-public class SortAndPagination<AFieldProvider extends FieldProvider> {
+public class SortAndPagination<AFieldProvider extends Enum<AFieldProvider> & FieldProvider> {
     private int pageSize;
     private int pageIndex;
-    // TODO: switch to a Class which wraps AFieldProvider & isAscending
-    //  then make this field a Set
-    private LinkedHashMap<AFieldProvider, Boolean> sorting;
+    private SortOrderList<AFieldProvider> sorting;
 }

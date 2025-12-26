@@ -3,19 +3,24 @@ package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.we
 import com.my_wall_color.color_manager.color.domain.ColorField;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.FieldProvider;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrder;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class WebSortAndPaginationMapperTest {
-    LinkedHashMap<ColorField, Boolean> expectedDefaultSorting = new LinkedHashMap<>(Map.of(ColorField.ID, true));
+    SortOrderList<ColorField> expectedDefaultSorting = SortOrderList.of(new SortOrder<>(ColorField.ID, SortOrder.Direction.ASCENDING));
+
+    private <T extends Enum<T> & FieldProvider> void testEqualityOfSAP(SortAndPagination<T> actual, SortAndPagination<T> expected) {
+        assertThat(actual.getPageIndex()).isEqualTo(expected.getPageIndex());
+        assertThat(actual.getPageSize()).isEqualTo(expected.getPageSize());
+        assertThat(actual.getSorting().getOrderList()).isEqualTo(expected.getSorting().getOrderList());
+    }
 
     @Test
     void shouldMapWithoutSortToDefault() {
@@ -23,7 +28,7 @@ class WebSortAndPaginationMapperTest {
         Pageable pageRequestWithoutSort = PageRequest.of(1, 5);
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<>(5, 1, expectedDefaultSorting);
-        assertThat(actual).isEqualTo(expected);
+        testEqualityOfSAP(actual, expected);
     }
 
     @Test
@@ -34,9 +39,9 @@ class WebSortAndPaginationMapperTest {
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<ColorField>(10, 2,
-                new LinkedHashMap<>(Map.of(ColorField.NAME, false))
+                SortOrderList.of(new SortOrder<>(ColorField.NAME, SortOrder.Direction.DESCENDING))
         );
-        assertThat(actual).isEqualTo(expected);
+        testEqualityOfSAP(actual, expected);
     }
 
     @Test
@@ -47,7 +52,7 @@ class WebSortAndPaginationMapperTest {
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<>(10, 2, expectedDefaultSorting);
-        assertThat(actual).isEqualTo(expected);
+        testEqualityOfSAP(actual, expected);
     }
 
     @Test
@@ -61,12 +66,12 @@ class WebSortAndPaginationMapperTest {
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<ColorField>(30, 3,
-                new LinkedHashMap<>(Map.ofEntries(
-                        Map.entry(ColorField.ID, true),
-                        Map.entry(ColorField.NAME, false)
-                ))
+                SortOrderList.of(
+                        new SortOrder<>(ColorField.ID, SortOrder.Direction.ASCENDING),
+                        new SortOrder<>(ColorField.NAME, SortOrder.Direction.DESCENDING)
+                )
         );
-        assertThat(actual).isEqualTo(expected);
+        testEqualityOfSAP(actual, expected);
     }
 
     @Test
@@ -80,11 +85,11 @@ class WebSortAndPaginationMapperTest {
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<>(30, 3,
-                new LinkedHashMap<>(Map.ofEntries(
-                        Map.entry(ColorField.NAME, false)
-                ))
+                SortOrderList.of(
+                        new SortOrder<>(ColorField.NAME, SortOrder.Direction.DESCENDING)
+                )
         );
-        assertThat(actual).isEqualTo(expected);
+        testEqualityOfSAP(actual, expected);
     }
 
     @Test
@@ -98,7 +103,7 @@ class WebSortAndPaginationMapperTest {
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<>(30, 3, expectedDefaultSorting);
-        assertThat(actual).isEqualTo(expected);
+        testEqualityOfSAP(actual, expected);
     }
 
     @Test
@@ -136,11 +141,11 @@ class WebSortAndPaginationMapperTest {
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<>(100, 100,
-                new LinkedHashMap<>(Map.ofEntries(
-                        Map.entry(ColorField.NAME, true),
-                        Map.entry(ColorField.ID, false)
-                ))
+                SortOrderList.of(
+                        new SortOrder<>(ColorField.NAME, SortOrder.Direction.ASCENDING),
+                        new SortOrder<>(ColorField.ID, SortOrder.Direction.DESCENDING)
+                )
         );
-        assertThat(actual).isEqualTo(expected);
+        testEqualityOfSAP(actual, expected);
     }
 }
