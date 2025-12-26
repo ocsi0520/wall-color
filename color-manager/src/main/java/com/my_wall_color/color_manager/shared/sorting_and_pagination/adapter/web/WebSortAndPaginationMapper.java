@@ -3,7 +3,6 @@ package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.we
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.FieldProvider;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import com.nimbusds.jose.util.Pair;
-import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -13,21 +12,31 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@AllArgsConstructor
 public class WebSortAndPaginationMapper<F extends Enum<F> & FieldProvider> {
-    private final Class<F> fieldEnum;
+    private final F[] allEnumValues;
+    private final F defaultField;
 
-    private boolean validate(Sort.Order examinedSortOrder) {
-        // TODO: check with functional interface so that we can get rid of FieldProvider interface
-        return Arrays.stream(fieldEnum.getEnumConstants()).anyMatch(field -> field.getFieldName().equals(examinedSortOrder.getProperty()));
+    private static <F extends Enum<F> & FieldProvider> F getDefaultField(F[] allEnumValues) {
+        if (allEnumValues == null || allEnumValues.length == 0)
+            throw new IllegalArgumentException("Empty Enum class is forbidden");
+        return allEnumValues[0];
+    }
+
+    public WebSortAndPaginationMapper(Class<F> fieldEnum) {
+        allEnumValues = fieldEnum.getEnumConstants();
+        defaultField = getDefaultField(allEnumValues);
+    }
+
+    private boolean isValidSortOrder(Sort.Order examinedSortOrder) {
+        return Arrays.stream(allEnumValues).anyMatch(field -> field.getFieldName().equals(examinedSortOrder.getProperty()));
     }
 
     // TODO: refactor
     public SortAndPagination<F> map(Pageable pageable) {
-        Stream<Sort.Order> orders = pageable.getSort().stream().filter(this::validate);
+        Stream<Sort.Order> orders = pageable.getSort().stream().filter(this::isValidSortOrder);
 
         LinkedHashMap<F, Boolean> mappedSorting = orders.map(order -> {
-                    Optional<F> foundField = Arrays.stream(fieldEnum.getEnumConstants()).filter(field -> field.getFieldName().equals(order.getProperty())).findFirst();
+                    Optional<F> foundField = Arrays.stream(allEnumValues).filter(field -> field.getFieldName().equals(order.getProperty())).findFirst();
                     return foundField
                             .map(field -> Pair.of(field, order.isAscending()))
                             .orElseThrow(() -> new IllegalArgumentException("no field with value: " + order.getProperty()));
@@ -39,9 +48,10 @@ public class WebSortAndPaginationMapper<F extends Enum<F> & FieldProvider> {
                                 (oldValue, newValue) -> newValue,
                                 LinkedHashMap::new
                         ));
-        // TODO: get a default ordering if (mappedSorting.isEmpty()) {}
 
-
+        if (mappedSorting.isEmpty())
+            mappedSorting.put(defaultField, true);
+        
         return new SortAndPagination<>(
                 pageable.getPageSize(),
                 pageable.getPageNumber(),

@@ -1,6 +1,7 @@
 package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.web;
 
 import com.my_wall_color.color_manager.color.domain.ColorField;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.FieldProvider;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -11,15 +12,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class WebSortAndPaginationMapperTest {
+    LinkedHashMap<ColorField, Boolean> expectedDefaultSorting = new LinkedHashMap<>(Map.of(ColorField.ID, true));
 
     @Test
-    void shouldMapWithoutSort() {
+    void shouldMapWithoutSortToDefault() {
         var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
         Pageable pageRequestWithoutSort = PageRequest.of(1, 5);
         var actual = unitUnderTest.map(pageRequestWithoutSort);
-        var expected = new SortAndPagination<ColorField>(5, 1, new LinkedHashMap<>());
+        var expected = new SortAndPagination<>(5, 1, expectedDefaultSorting);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -31,24 +34,24 @@ class WebSortAndPaginationMapperTest {
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<ColorField>(10, 2,
-                new LinkedHashMap<>(Map.ofEntries(Map.entry(ColorField.NAME, false)))
+                new LinkedHashMap<>(Map.of(ColorField.NAME, false))
         );
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    void shouldMapWithOneInvalidOrder() {
+    void shouldMapWithOneInvalidOrderToDefault() {
         var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
         Pageable pageRequestWithoutSort = PageRequest.of(2, 10,
                 Sort.by(new Sort.Order(Sort.Direction.DESC, "non-existent-field"))
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
-        var expected = new SortAndPagination<ColorField>(10, 2, new LinkedHashMap<>());
+        var expected = new SortAndPagination<>(10, 2, expectedDefaultSorting);
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    void shouldMapWithTwoValidOrders() {
+    void shouldMapWithTwoValidOrdersToDefault() {
         var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
         Pageable pageRequestWithoutSort = PageRequest.of(3, 30,
                 Sort.by(
@@ -76,7 +79,7 @@ class WebSortAndPaginationMapperTest {
                 )
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
-        var expected = new SortAndPagination<ColorField>(30, 3,
+        var expected = new SortAndPagination<>(30, 3,
                 new LinkedHashMap<>(Map.ofEntries(
                         Map.entry(ColorField.NAME, false)
                 ))
@@ -85,7 +88,7 @@ class WebSortAndPaginationMapperTest {
     }
 
     @Test
-    void shouldMapWithTwoInvalidOrder() {
+    void shouldMapWithTwoInvalidOrders() {
         var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class);
         Pageable pageRequestWithoutSort = PageRequest.of(3, 30,
                 Sort.by(
@@ -94,9 +97,23 @@ class WebSortAndPaginationMapperTest {
                 )
         );
         var actual = unitUnderTest.map(pageRequestWithoutSort);
-        var expected = new SortAndPagination<ColorField>(30, 3,
-                new LinkedHashMap<>()
-        );
+        var expected = new SortAndPagination<>(30, 3, expectedDefaultSorting);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldNotAcceptEmptyEnumClass() {
+        enum EmptyFieldProvider implements FieldProvider {
+            ;
+
+            @Override
+            public String getFieldName() {
+                return "";
+            }
+        }
+
+        assertThatThrownBy(() -> new WebSortAndPaginationMapper<>(EmptyFieldProvider.class))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Empty Enum");
     }
 }

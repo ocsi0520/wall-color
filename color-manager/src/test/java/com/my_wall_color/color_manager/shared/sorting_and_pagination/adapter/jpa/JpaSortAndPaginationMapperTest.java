@@ -17,8 +17,8 @@ enum TestTranslationEnum implements FieldProvider {
 
     private final String fieldName;
 
-    TestTranslationEnum(String egy) {
-        this.fieldName = egy;
+    TestTranslationEnum(String fieldName) {
+        this.fieldName = fieldName;
     }
 
     @Override
