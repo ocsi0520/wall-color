@@ -3,27 +3,17 @@ package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.we
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrder;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 public class WebSortAndPaginationMapper<F extends Enum<F>> {
-    private final SortOrderToEnumMapper<F> mapper;
     private final SortOrder<F> defaultSortOrder;
-
-    private static <F extends Enum<F>> SortOrder<F> getDefaultField(F[] allEnumValues) {
-        if (allEnumValues == null || allEnumValues.length == 0)
-            throw new IllegalArgumentException("Empty Enum class is forbidden");
-        return new SortOrder<>(allEnumValues[0], SortOrder.Direction.ASCENDING);
-    }
-
-    // TODO: pass down defaultSortOrder instead of getting it from Class<F>
-    public WebSortAndPaginationMapper(Class<F> fieldEnum, SortOrderToEnumMapper<F> mapper) {
-        this.defaultSortOrder = getDefaultField(fieldEnum.getEnumConstants());
-        this.mapper = mapper;
-    }
+    private final SortOrderToEnumMapper<F> mapper;
 
     public SortAndPagination<F> map(Pageable pageable) {
         var filteredMappedSortOrder =

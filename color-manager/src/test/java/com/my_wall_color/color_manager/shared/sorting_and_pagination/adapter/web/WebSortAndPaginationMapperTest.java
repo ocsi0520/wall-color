@@ -12,10 +12,12 @@ import org.springframework.data.domain.Sort;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class WebSortAndPaginationMapperTest {
-    SortOrderList<ColorField> expectedDefaultSorting = SortOrderList.of(new SortOrder<>(ColorField.ID, SortOrder.Direction.ASCENDING));
+
+    SortOrder<ColorField> defaultSortOrder = new SortOrder<>(ColorField.ID, SortOrder.Direction.ASCENDING);
+    SortOrderList<ColorField> expectedDefaultSorting = SortOrderList.of(defaultSortOrder);
+
     SortOrderToEnumMapper<ColorField> toEnumMapper = (str) -> switch (str) {
         case "id" -> Optional.of(ColorField.ID);
         case "name" -> Optional.of(ColorField.NAME);
@@ -30,7 +32,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithoutSortToDefault() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(defaultSortOrder, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(1, 5);
         var actual = unitUnderTest.map(pageRequestWithoutSort);
         var expected = new SortAndPagination<>(5, 1, expectedDefaultSorting);
@@ -39,7 +41,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithOneValidOrder() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(defaultSortOrder, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(2, 10,
                 Sort.by(new Sort.Order(Sort.Direction.DESC, "name"))
         );
@@ -52,7 +54,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithOneInvalidOrderToDefault() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(defaultSortOrder, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(2, 10,
                 Sort.by(new Sort.Order(Sort.Direction.DESC, "non-existent-field"))
         );
@@ -63,7 +65,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithTwoValidOrdersToDefault() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(defaultSortOrder, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(3, 30,
                 Sort.by(
                         new Sort.Order(Sort.Direction.ASC, "id"),
@@ -82,7 +84,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithOneValidAndOneInvalidOrder() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(defaultSortOrder, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(3, 30,
                 Sort.by(
                         new Sort.Order(Sort.Direction.ASC, "non-existent"),
@@ -100,7 +102,7 @@ class WebSortAndPaginationMapperTest {
 
     @Test
     void shouldMapWithTwoInvalidOrders() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(defaultSortOrder, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(3, 30,
                 Sort.by(
                         new Sort.Order(Sort.Direction.ASC, "non-existent"),
@@ -113,17 +115,8 @@ class WebSortAndPaginationMapperTest {
     }
 
     @Test
-    void shouldNotAcceptEmptyEnumClass() {
-        enum EmptyFieldProvider {;}
-
-        assertThatThrownBy(() -> new WebSortAndPaginationMapper<>(EmptyFieldProvider.class, value -> Optional.empty()))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Empty Enum");
-    }
-
-    @Test
     void shouldHandleExploitTryOnSort() {
-        var unitUnderTest = new WebSortAndPaginationMapper<>(ColorField.class, toEnumMapper);
+        var unitUnderTest = new WebSortAndPaginationMapper<>(defaultSortOrder, toEnumMapper);
         Pageable pageRequestWithoutSort = PageRequest.of(100, 100,
                 Sort.by(
                         new Sort.Order(Sort.Direction.ASC, "non-existent"),
