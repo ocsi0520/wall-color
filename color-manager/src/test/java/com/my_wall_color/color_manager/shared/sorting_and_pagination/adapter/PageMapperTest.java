@@ -4,6 +4,7 @@ import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.Page
 import com.my_wall_color.color_manager.user.UserFixture;
 import com.my_wall_color.color_manager.user.domain.User;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -15,10 +16,10 @@ class PageMapperTest {
     @Test
     void shouldHandleEmptyPage() {
         List<User> listOfUsers = List.of();
-        var input = new PageImpl(listOfUsers, PageRequest.of(4, 3), 7);
+        Page<User> input = new PageImpl<>(listOfUsers, PageRequest.of(4, 3), 7);
         var unitUnderTest = new PageMapper();
         var actual = unitUnderTest.toDomain(input);
-        var expected = new PageDTO<User>(listOfUsers, 4, 3, 7, 3);
+        var expected = new PageDTO<>(listOfUsers, 4, 3, 7, 3);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -26,10 +27,10 @@ class PageMapperTest {
     void shouldHandleSimplePage() {
         var userFixture = new UserFixture();
         List<User> listOfUsers = List.of(userFixture.donna, userFixture.jdoe, userFixture.alex);
-        var input = new PageImpl(listOfUsers, PageRequest.of(0, 3), 5);
+        Page<User> input = new PageImpl<>(listOfUsers, PageRequest.of(0, 3), 5);
         var unitUnderTest = new PageMapper();
         var actual = unitUnderTest.toDomain(input);
-        var expected = new PageDTO<User>(listOfUsers, 0, 3, 5, 2);
+        var expected = new PageDTO<>(listOfUsers, 0, 3, 5, 2);
         assertThat(actual).isEqualTo(expected);
     }
 }
