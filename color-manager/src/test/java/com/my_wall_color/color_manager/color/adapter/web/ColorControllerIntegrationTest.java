@@ -48,14 +48,32 @@ class ColorControllerIntegrationTest extends IntegrationTest {
     @Test
     public void shouldReturnLast3ColorsByName() {
         var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
-        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange("/api/color?page=0&size=3&sort=name,desc", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {});
+        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange("/api/color?page=0&size=3&sort=name,desc", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
+        });
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
         var expectedContent = List.of(colorFixture.szarkalab, colorFixture.sulyom, colorFixture.palastfu);
-        assertThat(actual.getTotalPages()).isEqualTo(3);
-        assertThat(actual.getSize()).isEqualTo(3);
-        assertThat(actual.getNumber()).isEqualTo(0);
-        assertThat(actual.getTotalElements()).isEqualTo(7);
-        assertThat(actual.getContent()).isEqualTo(expectedContent);
+        var expected = new PageDTO<>(expectedContent, 0, 3, 7, 3);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldReturnDefaultPage() {
+        var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
+        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange("/api/color", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
+        });
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        var actual = response.getBody();
+        var expectedContent = List.of(
+                colorFixture.sulyom,
+                colorFixture.brazilMenta,
+                colorFixture.havasiEukaliptusz,
+                colorFixture.szarkalab,
+                colorFixture.havasiGyopar,
+                colorFixture.kekSzelloRozsa,
+                colorFixture.palastfu
+        );
+        var expected = new PageDTO<>(expectedContent, 0, 20, 7, 1);
+        assertThat(actual).isEqualTo(expected);
     }
 }

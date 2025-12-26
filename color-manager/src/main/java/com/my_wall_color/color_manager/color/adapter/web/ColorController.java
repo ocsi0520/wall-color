@@ -34,7 +34,7 @@ public class ColorController {
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 // TODO: get rid of this and create default sorting in WebSortAndPaginationMapper
-                pageable.getSortOr(Sort.by(Sort.Order.desc("name")))
+                pageable.getSortOr(Sort.by(Sort.Order.asc("id")))
         );
         SortAndPagination<ColorField> SortAndPaginationInfo = sortAndPaginationMapper.map(pageRequest);
         PageDTO<Color> page = colorRepository.findAll(SortAndPaginationInfo);
