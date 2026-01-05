@@ -3,6 +3,10 @@ package com.my_wall_color.color_manager.color.adapter.jpa;
 
 import com.my_wall_color.color_manager.color.domain.Color;
 import com.my_wall_color.color_manager.IntegrationTest;
+import com.my_wall_color.color_manager.color.domain.ColorField;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrder;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +46,44 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
     void shouldReturn3ColorsForJdoeUser() {
         List<Color> colorsForJdoeUser = unitUnderTest.findAllAssociatedWith(userFixture.jdoe.getId());
         assertThat(colorsForJdoeUser).isEqualTo(List.of(colorFixture.sulyom, colorFixture.havasiGyopar));
+    }
+
+    // TODO: should test also page metadata (number, size, total elements)
+    @Test
+    void shouldReturnThirdAndFourthColor() {
+        var actual = unitUnderTest.findAll(new SortAndPagination<ColorField>(2, 1, SortOrderList.of()));
+        assertThat(actual.getContent()).containsExactly(
+                colorFixture.havasiEukaliptusz,
+                colorFixture.szarkalab
+        );
+    }
+
+    @Test
+    void shouldReturnNothingDueToExceedingPageSize() {
+        var actual = unitUnderTest.findAll(new SortAndPagination<ColorField>(5, 5, SortOrderList.of()));
+        assertThat(actual.getContent()).isEmpty();
+    }
+
+    @Test
+    void shouldReturnFourthAndThirdColor() {
+        var sort = SortOrderList.of(new SortOrder<>(ColorField.NAME, SortOrder.Direction.DESCENDING));
+        var actual = unitUnderTest.findAll(new SortAndPagination<>(2, 1, sort));
+        assertThat(actual.getContent()).containsExactly(colorFixture.palastfu, colorFixture.kekSzelloRozsa);
+    }
+
+    @Test
+    void shouldReturnAllColorByReverse() {
+        var sort = SortOrderList.of(new SortOrder<>(ColorField.ID, SortOrder.Direction.DESCENDING));
+        var actual = unitUnderTest.findAll(new SortAndPagination<>(10, 0, sort));
+
+        assertThat(actual.getContent()).containsExactly(
+                colorFixture.palastfu,
+                colorFixture.kekSzelloRozsa,
+                colorFixture.havasiGyopar,
+                colorFixture.szarkalab,
+                colorFixture.havasiEukaliptusz,
+                colorFixture.brazilMenta,
+                colorFixture.sulyom
+        );
     }
 }
