@@ -3,6 +3,7 @@ package com.my_wall_color.color_manager.color.domain;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
 import java.util.stream.Stream;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -16,6 +17,10 @@ public class Color {
 
     private String name;
     private Integer recordedBy;
+
+    public static Color create(Integer id, int red, int green, int blue, String name, Integer recordedBy) {
+        return Color.create(id, (short) red, (short) green, (short) blue, name, recordedBy);
+    }
 
     public static Color create(Integer id, short red, short green, short blue, String name, Integer recordedBy) {
         boolean hasIncorrectComponent = Stream.of(red, green, blue).anyMatch(component -> component < 0 || component > 255);
