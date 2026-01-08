@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ColorFixture {
-    public Color sulyom = new Color(null, (short) 136, (short) 147, (short) 152, "Sulyom", null);
-    public Color brazilMenta = new Color(null, (short) 107, (short) 192, (short) 179, "Brazil menta", null);
-    public Color havasiEukaliptusz = new Color(null, (short) 216, (short) 217, (short) 216, "Havasi eukaliptusz", null);
-    public Color szarkalab = new Color(null, (short) 10, (short) 104, (short) 174, "Szarkaláb", null);
-    public Color havasiGyopar = new Color(null, (short) 237, (short) 233, (short) 227, "Havasi gyopár", null);
-    public Color kekSzelloRozsa = new Color(null, (short) 142, (short) 205, (short) 233, "Kék szellő rózsa", null);
-    public Color palastfu = new Color(null, (short) 166, (short) 198, (short) 63, "Palástfű", null);
-    public Color nonExistent = new Color(9999, (short) 1, (short) 2, (short) 3, "non-existent", null);
+    public Color sulyom = Color.create(null, (short) 136, (short) 147, (short) 152, "Sulyom", null);
+    public Color brazilMenta = Color.create(null, (short) 107, (short) 192, (short) 179, "Brazil menta", null);
+    public Color havasiEukaliptusz = Color.create(null, (short) 216, (short) 217, (short) 216, "Havasi eukaliptusz", null);
+    public Color szarkalab = Color.create(null, (short) 10, (short) 104, (short) 174, "Szarkaláb", null);
+    public Color havasiGyopar = Color.create(null, (short) 237, (short) 233, (short) 227, "Havasi gyopár", null);
+    public Color kekSzelloRozsa = Color.create(null, (short) 142, (short) 205, (short) 233, "Kék szellő rózsa", null);
+    public Color palastfu = Color.create(null, (short) 166, (short) 198, (short) 63, "Palástfű", null);
+    public Color nonExistent = Color.create(9999, (short) 1, (short) 2, (short) 3, "non-existent", null);
 
     @Autowired
     ColorRepository repository;
