@@ -5,6 +5,7 @@ import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.Sort
 import com.my_wall_color.color_manager.user.domain.User;
 import com.my_wall_color.color_manager.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -24,7 +25,7 @@ public class ColorService {
         return colorRepository.findAll(sortAndPaginationInfo);
     }
 
-    public Color createColor(ColorCreationRequest request, String name) throws NoSuchElementException {
+    public Color createColor(ColorCreationRequest request, String name) throws NoSuchElementException, DataIntegrityViolationException, IllegalArgumentException {
         Optional<User> foundUser = userRepository.findByUsername(name);
         User creator = foundUser.orElseThrow(() -> new NoSuchElementException("No user is found with username:" + name));
         Color newColor = Color.create(null, request.red(), request.green(), request.blue(), request.name(), creator.getId());

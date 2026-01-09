@@ -18,11 +18,11 @@ public class Color {
     private String name;
     private Integer recordedBy;
 
-    public static Color create(Integer id, int red, int green, int blue, String name, Integer recordedBy) {
+    public static Color create(Integer id, int red, int green, int blue, String name, Integer recordedBy) throws IllegalArgumentException {
         return Color.create(id, (short) red, (short) green, (short) blue, name, recordedBy);
     }
 
-    public static Color create(Integer id, short red, short green, short blue, String name, Integer recordedBy) {
+    public static Color create(Integer id, short red, short green, short blue, String name, Integer recordedBy) throws IllegalArgumentException {
         boolean hasIncorrectComponent = Stream.of(red, green, blue).anyMatch(component -> component < 0 || component > 255);
         if (hasIncorrectComponent) throw new IllegalArgumentException("all color component must be between 0 and 255");
         boolean hasInvalidName = name == null || name.isEmpty();
