@@ -14,4 +14,5 @@ public interface ColorRepository {
     void assignToUser(Color color, Integer userId);
     PageDTO<Color> findAll(SortAndPagination<ColorField> sortAndPagination);
     void removeBy(Integer id);
+    void removeAssignment(Color color, Integer userId);
 }

@@ -58,10 +58,16 @@ public class JpaColorRepositoryAdapter implements ColorRepository {
         return pageMapper.toDomain(mappedContentPage);
     }
 
+    // TODO: test from here
     @Override
     public void removeBy(Integer colorId) {
         joinRepository.deleteAllAssignmentsFor(colorId);
         implementation.deleteById(colorId);
+    }
+
+    @Override
+    public void removeAssignment(Color color, Integer userId) {
+        joinRepository.deleteById(new ColorUserJoinKey(userId, color.getId()));
     }
 
 }

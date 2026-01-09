@@ -86,4 +86,6 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
                 colorFixture.sulyom
         );
     }
+
+    // TODO: rest of the tests
 }
