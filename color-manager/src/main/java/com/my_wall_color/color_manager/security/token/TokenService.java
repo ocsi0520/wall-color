@@ -18,6 +18,7 @@ public class TokenService {
     private final JwtEncoder encoder;
     private final Clock clock;
     private final Duration maxAge;
+    public static String ROLES_CLAIM_NAME = "roles";
 
     public TokenService(JwtEncoder encoder, Clock clock, @Value("${token.max-age-seconds:3600}") int maxAgeInSeconds) {
         this.encoder = encoder;
@@ -28,8 +29,7 @@ public class TokenService {
     public TokenResult generateToken(Authentication authentication) {
         Instant now = Instant.now(clock);
         Instant expiryTime = now.plus(maxAge);
-        String scope = authentication.getAuthorities().stream()
-                // TODO: here we might have problems about SCOPE_ and ROLE_ prefixes
+        String roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -37,7 +37,7 @@ public class TokenService {
                 .issuedAt(now)
                 .expiresAt(expiryTime)
                 .subject(authentication.getName())
-                .claim("scope", scope)
+                .claim(ROLES_CLAIM_NAME, roles)
                 .build();
         String token = this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         return new TokenResult(token, maxAge);

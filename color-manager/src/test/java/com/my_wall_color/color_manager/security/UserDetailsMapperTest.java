@@ -22,7 +22,7 @@ class UserDetailsMapperTest {
         assertThat(details.isCredentialsNonExpired()).isTrue();
         assertThat(details.isAccountNonLocked()).isTrue();
         assertThat(details.isEnabled()).isTrue();
-        assertThat(details.getAuthorities()).isEqualTo(List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        assertThat(details.getAuthorities()).isEqualTo(List.of(new SimpleGrantedAuthority("ADMIN")));
         assertThat(details.getUsername()).isEqualTo(jdoeUser.getUsername());
         assertThat(details.getPassword()).isEqualTo(jdoeUser.getPassword());
     }
