@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/color")
@@ -47,6 +48,18 @@ public class ColorController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage())).build();
         }
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteColor(@PathVariable int id) {
+        try {
+            colorService.deleteColorBy(id);
+            return ResponseEntity.ok().build();
+        } catch(NoSuchElementException e) {
+            return ResponseEntity.of(ProblemDetail.forStatus(HttpStatus.NOT_FOUND)).build();
+        }
+
     }
 
     @GetMapping

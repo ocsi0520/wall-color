@@ -8,25 +8,19 @@ import com.my_wall_color.color_manager.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.test.context.NestedTestConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@NestedTestConfiguration(NestedTestConfiguration.EnclosingConfiguration.INHERIT)
 class ColorControllerIntegrationCreateTest extends IntegrationTest {
     @Autowired
     TestRestTemplate restTemplate;
 
     @Autowired
     AuthTestHelper authTestHelper;
-
-    @Value("${spring.data.web.pageable.max-page-index}")
-    private Integer maxPageIndex;
 
     @BeforeEach
     void injectFixtures() {

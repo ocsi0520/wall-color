@@ -36,6 +36,8 @@ public class ColorFixture {
         repository.assignToUser(sulyom, userFixture.jdoe.getId());
         repository.assignToUser(havasiGyopar, userFixture.jdoe.getId());
         repository.assignToUser(palastfu, userFixture.donna.getId());
+        repository.assignToUser(sulyom, userFixture.donna.getId());
+        repository.assignToUser(sulyom, userFixture.alex.getId());
     }
 
     private void injectColors(UserFixture userFixture) {
