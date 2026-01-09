@@ -5,10 +5,12 @@ import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.Sort
 import com.my_wall_color.color_manager.user.domain.User;
 import com.my_wall_color.color_manager.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor
 public class ColorService {
     private final ColorRepository colorRepository;
