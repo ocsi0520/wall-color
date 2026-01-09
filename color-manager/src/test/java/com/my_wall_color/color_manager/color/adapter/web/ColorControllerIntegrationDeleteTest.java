@@ -9,7 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,18 +57,16 @@ class ColorControllerIntegrationDeleteTest extends IntegrationTest {
         var fetchResponse = restTemplate.exchange("/api/color/" + sulyom.getId(), HttpMethod.GET, entity, Color.class);
         assertThat(fetchResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
-        testUserHasAssignmentToColor(userFixture.jdoe, sulyom);
-        testUserHasAssignmentToColor(userFixture.donna, sulyom);
-        testUserHasAssignmentToColor(userFixture.alex, sulyom);
+        testColorRevokedFromUser(userFixture.jdoe, sulyom);
+        testColorRevokedFromUser(userFixture.donna, sulyom);
     }
 
-    private void testUserHasAssignmentToColor(User user, Color deletedColor) {
-        // TODO: uncomment after /api/me/active-color is implemented
-//        var headerWithAuth = authTestHelper.getAuthIncludedHeadersFor(user);
-//        var entity = new HttpEntity<>(headerWithAuth);
-//        ResponseEntity<List<Color>> assignedColorsResponse = restTemplate.exchange("/api/me/active-color/", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
-//        });
-//        var colorStillAssigned = assignedColorsResponse.getBody().stream().anyMatch(color -> deletedColor.getId().equals(color.getId()));
-//        assertThat(colorStillAssigned).isFalse();
+    private void testColorRevokedFromUser(User user, Color deletedColor) {
+        var headerWithAuth = authTestHelper.getAuthIncludedHeadersFor(user);
+        var entity = new HttpEntity<>(headerWithAuth);
+        ResponseEntity<List<Color>> assignedColorsResponse = restTemplate.exchange("/api/me/active-color", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
+        });
+        var colorStillAssigned = assignedColorsResponse.getBody().stream().anyMatch(color -> deletedColor.getId().equals(color.getId()));
+        assertThat(colorStillAssigned).isFalse();
     }
 }
