@@ -16,7 +16,8 @@ public class UserDetailsMapper {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
                 if (user.getIsAdmin())
-                    return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                    // TODO: extract roles into separate file (enum or static string members)
+                    return List.of(new SimpleGrantedAuthority("ADMIN"));
                 else
                     return List.of();
             }

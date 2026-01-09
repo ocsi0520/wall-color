@@ -77,6 +77,7 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
         var actual = unitUnderTest.findAll(new SortAndPagination<>(10, 0, sort));
 
         assertThat(actual.getContent()).containsExactly(
+                colorFixture.greenBeige,
                 colorFixture.palastfu,
                 colorFixture.kekSzelloRozsa,
                 colorFixture.havasiGyopar,
@@ -86,4 +87,6 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
                 colorFixture.sulyom
         );
     }
+
+    // TODO: rest of the tests
 }

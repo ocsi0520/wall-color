@@ -1,8 +1,6 @@
 package com.my_wall_color.color_manager.color.adapter.jpa;
 
 import com.my_wall_color.color_manager.color.domain.Color;
-import com.my_wall_color.color_manager.color.adapter.jpa.JpaColor;
-import com.my_wall_color.color_manager.color.adapter.jpa.JpaColorMapper;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -13,7 +11,7 @@ class JpaColorMapperTest {
 
     @Test
     void fromDomain() {
-        Color color = new Color(971, (short) 10, (short) 20, (short) 30, "test-color", 31);
+        Color color = Color.create(971, 10, 20, 30, "test-color", 31);
         JpaColor jpaColor = unitUnderTest.fromDomain(color);
         assertThat(jpaColor.getId()).isEqualTo(971);
         assertThat(jpaColor.getRed()).isEqualTo((short) 10);
