@@ -1,5 +1,9 @@
-package com.my_wall_color.color_manager.color.domain;
+package com.my_wall_color.color_manager.color.usecase;
 
+import com.my_wall_color.color_manager.color.domain.Color;
+import com.my_wall_color.color_manager.color.domain.ColorCreationRequest;
+import com.my_wall_color.color_manager.color.domain.ColorField;
+import com.my_wall_color.color_manager.color.domain.ColorRepository;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
