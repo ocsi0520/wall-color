@@ -78,6 +78,25 @@ class ActiveColorControllerIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void shouldLimitAssignmentsTo7() {
+        var authIncludedEntity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.alex));
+        List<Color> allFixtureColors = colorFixture.getAllFixtureColors();
+        var firstSevenColors = allFixtureColors.subList(0, 7);
+        for (Color color : firstSevenColors) {
+            ResponseEntity<Void> assignResponse = restTemplate.exchange("/api/me/active-color/" + color.getId(), HttpMethod.POST, authIncludedEntity, Void.class);
+            assertThat(assignResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        }
+        var eigthColor = allFixtureColors.get(7);
+        ResponseEntity<Void> actual = restTemplate.exchange("/api/me/active-color/" + eigthColor.getId(), HttpMethod.POST, authIncludedEntity, Void.class);
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+
+        for (Color color : firstSevenColors) {
+            ResponseEntity<Void> revokeResponse = restTemplate.exchange("/api/me/active-color/" + color.getId(), HttpMethod.DELETE, authIncludedEntity, Void.class);
+            assertThat(revokeResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @Test
     void shouldNotRevokeNonExistingColor() {
         var authIncludedEntity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
         ResponseEntity<Void> actual = restTemplate.exchange("/api/me/active-color/" + colorFixture.nonExistent.getId(), HttpMethod.DELETE, authIncludedEntity, Void.class);

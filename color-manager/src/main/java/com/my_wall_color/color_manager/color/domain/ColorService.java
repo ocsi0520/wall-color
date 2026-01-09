@@ -49,7 +49,7 @@ public class ColorService {
     }
 
     // TODO: unit test
-    public void assignColorToUser(int colorId, String username) throws ColorAlreadyAssignedException, NoSuchElementException {
+    public void assignColorToUser(int colorId, String username) throws ColorAlreadyAssignedException, NoSuchElementException, DataIntegrityViolationException {
         var user = userRepository.findByUsername(username);
         if (user.isEmpty()) throw new NoSuchElementException("No user was found with username: " + username);
         Integer userId = user.get().getId();
@@ -57,8 +57,12 @@ public class ColorService {
         var color = colorRepository.findById(colorId);
         if (color.isEmpty()) throw new NoSuchElementException("No color was found with id: " + colorId);
 
-        var alreadyAssigned = colorRepository.findAllAssociatedWith(userId).stream().anyMatch(foundColor -> foundColor.getId().equals(colorId));
+        List<Color> allAssociatedColor = colorRepository.findAllAssociatedWith(userId);
+        var alreadyAssigned = allAssociatedColor.stream().anyMatch(foundColor -> foundColor.getId().equals(colorId));
         if (alreadyAssigned) throw new ColorAlreadyAssignedException(colorId, username);
+
+        if (allAssociatedColor.size() >= 7)
+            throw new DataIntegrityViolationException("Maximum 7 colors can be assigned to a user");
 
         colorRepository.assignToUser(color.get(), userId);
     }

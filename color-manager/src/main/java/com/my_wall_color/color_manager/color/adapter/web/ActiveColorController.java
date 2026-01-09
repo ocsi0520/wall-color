@@ -3,6 +3,7 @@ package com.my_wall_color.color_manager.color.adapter.web;
 import com.my_wall_color.color_manager.color.domain.Color;
 import com.my_wall_color.color_manager.color.domain.ColorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,8 @@ public class ActiveColorController {
             return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage())).build();
         } catch (ColorAlreadyAssignedException e) {
             return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage())).build();
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage())).build();
         }
     }
 
