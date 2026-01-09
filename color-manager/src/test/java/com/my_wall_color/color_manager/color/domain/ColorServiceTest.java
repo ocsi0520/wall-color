@@ -55,14 +55,14 @@ class ColorServiceTest {
 
     @Test
     void shouldThrowAsNoUserWasFound() {
-        var request = new ColorCreationRequest((short) 0, (short) 0, (short) 0, "black");
+        var request = ColorCreationRequest.of(0, 0, 0, "black");
         when(userRepository.findByUsername(jdoe.getUsername())).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> unitUnderTest.createColor(request, jdoe.getUsername()));
     }
 
     @Test
     void shouldDelegateColorCreationToRepository() {
-        var request = new ColorCreationRequest((short) 0, (short) 0, (short) 0, "black");
+        var request = ColorCreationRequest.of(0, 0, 0, "black");
         var expectedColor = Color.create(1, 0, 0, 0, "black", jdoe.getId());
         when(userRepository.findByUsername(jdoe.getUsername())).thenReturn(Optional.of(jdoe));
         ArgumentCaptor<Color> captor = ArgumentCaptor.forClass(Color.class);
