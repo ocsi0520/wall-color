@@ -21,6 +21,7 @@ public class ColorFixture {
     public Color havasiGyopar = Color.create(null, 237, 233, 227, "Havasi gyopár", null);
     public Color kekSzelloRozsa = Color.create(null, 142, 205, 233, "Kék szellő rózsa", null);
     public Color palastfu = Color.create(null, 166, 198, 63, "Palástfű", null);
+    public Color greenBeige = Color.create(null, 190, 189, 127, "Green Beige", null);
     public Color nonExistent = Color.create(9999, 1, 2, 3, "non-existent", null);
 
     private Map<User, List<Color>> userListMap = new HashMap<>();
@@ -38,6 +39,19 @@ public class ColorFixture {
     public List<Color> getInitialAssignedColorsFor(User user) {
         List<Color> assignedColorsToUser = userListMap.get(user);
         return assignedColorsToUser == null ? List.of() : assignedColorsToUser;
+    }
+
+    public List<Color> getAllFixtureColors() {
+        return List.of(
+                sulyom,
+                brazilMenta,
+                havasiEukaliptusz,
+                szarkalab,
+                havasiGyopar,
+                kekSzelloRozsa,
+                palastfu,
+                greenBeige
+        );
     }
 
     @Autowired
@@ -75,6 +89,7 @@ public class ColorFixture {
         havasiGyopar = injectColorWithRecorder(havasiGyopar, userFixture.donna);
         kekSzelloRozsa = injectColorWithRecorder(kekSzelloRozsa, userFixture.jdoe);
         palastfu = injectColorWithRecorder(palastfu, userFixture.jdoe);
+        greenBeige = injectColorWithRecorder(greenBeige, userFixture.jdoe);
     }
 
     private Color injectColorWithRecorder(Color color, User recorder) {

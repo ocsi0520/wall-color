@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,27 +35,11 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
     private Integer maxPageIndex;
 
     private @NotNull List<Color> getAllColorsInInsertionOrder() {
-        return List.of(
-                colorFixture.sulyom,
-                colorFixture.brazilMenta,
-                colorFixture.havasiEukaliptusz,
-                colorFixture.szarkalab,
-                colorFixture.havasiGyopar,
-                colorFixture.kekSzelloRozsa,
-                colorFixture.palastfu
-        );
+        return colorFixture.getAllFixtureColors().stream().sorted(Comparator.comparing(Color::getId)).toList();
     }
 
     private @NotNull List<Color> getAllColorsSortedByName() {
-        return Stream.of(
-                colorFixture.sulyom,
-                colorFixture.brazilMenta,
-                colorFixture.havasiEukaliptusz,
-                colorFixture.szarkalab,
-                colorFixture.havasiGyopar,
-                colorFixture.kekSzelloRozsa,
-                colorFixture.palastfu
-        ).sorted(Comparator.comparing(Color::getName)).toList();
+        return colorFixture.getAllFixtureColors().stream().sorted(Comparator.comparing(Color::getName)).toList();
     }
 
     @BeforeEach
@@ -98,7 +81,7 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
         var expectedContent = List.of(colorFixture.szarkalab, colorFixture.sulyom, colorFixture.palastfu);
-        var expected = new PageDTO<>(expectedContent, 0, 3, 7, 3);
+        var expected = new PageDTO<>(expectedContent, 0, 3, 8, 3);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -109,7 +92,7 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
         });
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsInInsertionOrder(), 0, 20, 7, 1);
+        var expected = new PageDTO<>(getAllColorsInInsertionOrder(), 0, 20, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -123,7 +106,7 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsSortedByName().reversed(), 0, 100, 7, 1);
+        var expected = new PageDTO<>(getAllColorsSortedByName().reversed(), 0, 100, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -151,7 +134,7 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsInInsertionOrder().reversed(), 0, 20, 7, 1);
+        var expected = new PageDTO<>(getAllColorsInInsertionOrder().reversed(), 0, 20, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -178,7 +161,7 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(List.of(), maxPageIndex, 100, 7, 1);
+        var expected = new PageDTO<>(List.of(), maxPageIndex, 100, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
