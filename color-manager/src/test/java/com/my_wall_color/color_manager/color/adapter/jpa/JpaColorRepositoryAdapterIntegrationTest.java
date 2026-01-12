@@ -10,13 +10,11 @@ import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.Sort
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
     @Autowired
     private JpaColorRepositoryAdapter unitUnderTest;
@@ -77,6 +75,7 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
         var actual = unitUnderTest.findAll(new SortAndPagination<>(10, 0, sort));
 
         assertThat(actual.getContent()).containsExactly(
+                colorFixture.greenBeige,
                 colorFixture.palastfu,
                 colorFixture.kekSzelloRozsa,
                 colorFixture.havasiGyopar,
@@ -86,4 +85,6 @@ class JpaColorRepositoryAdapterIntegrationTest extends IntegrationTest {
                 colorFixture.sulyom
         );
     }
+
+    // TODO: rest of the tests
 }

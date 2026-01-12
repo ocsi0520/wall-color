@@ -7,16 +7,52 @@ import com.my_wall_color.color_manager.user.UserFixture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Component
 public class ColorFixture {
-    public Color sulyom = new Color(null, (short) 136, (short) 147, (short) 152, "Sulyom", null);
-    public Color brazilMenta = new Color(null, (short) 107, (short) 192, (short) 179, "Brazil menta", null);
-    public Color havasiEukaliptusz = new Color(null, (short) 216, (short) 217, (short) 216, "Havasi eukaliptusz", null);
-    public Color szarkalab = new Color(null, (short) 10, (short) 104, (short) 174, "Szarkaláb", null);
-    public Color havasiGyopar = new Color(null, (short) 237, (short) 233, (short) 227, "Havasi gyopár", null);
-    public Color kekSzelloRozsa = new Color(null, (short) 142, (short) 205, (short) 233, "Kék szellő rózsa", null);
-    public Color palastfu = new Color(null, (short) 166, (short) 198, (short) 63, "Palástfű", null);
-    public Color nonExistent = new Color(9999, (short) 1, (short) 2, (short) 3, "non-existent", null);
+    public Color sulyom = Color.create(null, 136, 147, 152, "Sulyom", null);
+    public Color brazilMenta = Color.create(null, 107, 192, 179, "Brazil menta", null);
+    public Color havasiEukaliptusz = Color.create(null, 216, 217, 216, "Havasi eukaliptusz", null);
+    public Color szarkalab = Color.create(null, 10, 104, 174, "Szarkaláb", null);
+    public Color havasiGyopar = Color.create(null, 237, 233, 227, "Havasi gyopár", null);
+    public Color kekSzelloRozsa = Color.create(null, 142, 205, 233, "Kék szellő rózsa", null);
+    public Color palastfu = Color.create(null, 166, 198, 63, "Palástfű", null);
+    public Color greenBeige = Color.create(null, 190, 189, 127, "Green Beige", null);
+    public Color nonExistent = Color.create(9999, 1, 2, 3, "non-existent", null);
+
+    private Map<User, List<Color>> userListMap = new HashMap<>();
+
+    private void storeAssignment(Color savedColor, User user) {
+        if (userListMap.containsKey(user)) {
+            userListMap.get(user).add(savedColor);
+        } else {
+            var newList = new ArrayList<Color>();
+            newList.add(savedColor);
+            userListMap.put(user, newList);
+        }
+    }
+
+    public List<Color> getInitialAssignedColorsFor(User user) {
+        List<Color> assignedColorsToUser = userListMap.get(user);
+        return assignedColorsToUser == null ? List.of() : assignedColorsToUser;
+    }
+
+    public List<Color> getAllFixtureColors() {
+        return List.of(
+                sulyom,
+                brazilMenta,
+                havasiEukaliptusz,
+                szarkalab,
+                havasiGyopar,
+                kekSzelloRozsa,
+                palastfu,
+                greenBeige
+        );
+    }
 
     @Autowired
     ColorRepository repository;
@@ -32,10 +68,17 @@ public class ColorFixture {
         assignColorsToUsers(userFixture);
     }
 
+    private void assignColorToUser(Color color, User user) {
+        repository.assignToUser(color, user.getId());
+        storeAssignment(color, user);
+    }
+
     private void assignColorsToUsers(UserFixture userFixture) {
-        repository.assignToUser(sulyom, userFixture.jdoe.getId());
-        repository.assignToUser(havasiGyopar, userFixture.jdoe.getId());
-        repository.assignToUser(palastfu, userFixture.donna.getId());
+        assignColorToUser(sulyom, userFixture.jdoe);
+        assignColorToUser(havasiGyopar, userFixture.jdoe);
+
+        assignColorToUser(palastfu, userFixture.donna);
+        assignColorToUser(sulyom, userFixture.donna);
     }
 
     private void injectColors(UserFixture userFixture) {
@@ -46,6 +89,7 @@ public class ColorFixture {
         havasiGyopar = injectColorWithRecorder(havasiGyopar, userFixture.donna);
         kekSzelloRozsa = injectColorWithRecorder(kekSzelloRozsa, userFixture.jdoe);
         palastfu = injectColorWithRecorder(palastfu, userFixture.jdoe);
+        greenBeige = injectColorWithRecorder(greenBeige, userFixture.jdoe);
     }
 
     private Color injectColorWithRecorder(Color color, User recorder) {

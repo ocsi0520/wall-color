@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -18,12 +17,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ColorControllerIntegrationTest extends IntegrationTest {
+class ColorControllerIntegrationReadTest extends IntegrationTest {
     @Autowired
     TestRestTemplate restTemplate;
 
@@ -34,36 +31,11 @@ class ColorControllerIntegrationTest extends IntegrationTest {
     private Integer maxPageIndex;
 
     private @NotNull List<Color> getAllColorsInInsertionOrder() {
-        return List.of(
-                colorFixture.sulyom,
-                colorFixture.brazilMenta,
-                colorFixture.havasiEukaliptusz,
-                colorFixture.szarkalab,
-                colorFixture.havasiGyopar,
-                colorFixture.kekSzelloRozsa,
-                colorFixture.palastfu
-        );
+        return colorFixture.getAllFixtureColors().stream().sorted(Comparator.comparing(Color::getId)).toList();
     }
 
     private @NotNull List<Color> getAllColorsSortedByName() {
-        return Stream.of(
-                colorFixture.sulyom,
-                colorFixture.brazilMenta,
-                colorFixture.havasiEukaliptusz,
-                colorFixture.szarkalab,
-                colorFixture.havasiGyopar,
-                colorFixture.kekSzelloRozsa,
-                colorFixture.palastfu
-        ).sorted(Comparator.comparing(Color::getName)).toList();
-    }
-
-    private String generateSearchQuery(int pageIndex, int pageSize, String... sortOrders) {
-        return generateSearchQuery(String.valueOf(pageIndex), String.valueOf(pageSize), sortOrders);
-    }
-
-    private String generateSearchQuery(String pageIndex, String pageSize, String... sortOrders) {
-        var sort = Arrays.stream(sortOrders).map(order -> "sort=" + order).collect(Collectors.joining("&"));
-        return "?page=" + pageIndex + "&size=" + pageSize + '&' + sort;
+        return colorFixture.getAllFixtureColors().stream().sorted(Comparator.comparing(Color::getName)).toList();
     }
 
     @BeforeEach
@@ -78,6 +50,16 @@ class ColorControllerIntegrationTest extends IntegrationTest {
         ResponseEntity<Color> response = restTemplate.exchange("/api/color/" + colorFixture.nonExistent.getId(), HttpMethod.GET, entity, Color.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    private String generateSearchQuery(int pageIndex, int pageSize, String... sortOrders) {
+        return generateSearchQuery(String.valueOf(pageIndex), String.valueOf(pageSize), sortOrders);
+    }
+
+    private String generateSearchQuery(String pageIndex, String pageSize, String... sortOrders) {
+        var sort = Arrays.stream(sortOrders).map(order -> "sort=" + order).collect(Collectors.joining("&"));
+        return "?page=" + pageIndex + "&size=" + pageSize + '&' + sort;
+    }
+
 
     @Test
     public void shouldReturnSulyomColor() {
@@ -95,7 +77,7 @@ class ColorControllerIntegrationTest extends IntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
         var expectedContent = List.of(colorFixture.szarkalab, colorFixture.sulyom, colorFixture.palastfu);
-        var expected = new PageDTO<>(expectedContent, 0, 3, 7, 3);
+        var expected = new PageDTO<>(expectedContent, 0, 3, 8, 3);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -106,7 +88,7 @@ class ColorControllerIntegrationTest extends IntegrationTest {
         });
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsInInsertionOrder(), 0, 20, 7, 1);
+        var expected = new PageDTO<>(getAllColorsInInsertionOrder(), 0, 20, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -120,7 +102,7 @@ class ColorControllerIntegrationTest extends IntegrationTest {
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsSortedByName().reversed(), 0, 100, 7, 1);
+        var expected = new PageDTO<>(getAllColorsSortedByName().reversed(), 0, 100, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -148,7 +130,7 @@ class ColorControllerIntegrationTest extends IntegrationTest {
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsInInsertionOrder().reversed(), 0, 20, 7, 1);
+        var expected = new PageDTO<>(getAllColorsInInsertionOrder().reversed(), 0, 20, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -175,7 +157,8 @@ class ColorControllerIntegrationTest extends IntegrationTest {
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(List.of(), maxPageIndex, 100, 7, 1);
+        var expected = new PageDTO<>(List.of(), maxPageIndex, 100, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
+
 }

@@ -42,8 +42,8 @@ class TokenServiceTest {
                 "jdoe",
                 null,
                 List.of(
-                        new SimpleGrantedAuthority("ROLE_USER"),
-                        new SimpleGrantedAuthority("ROLE_ADMIN")
+                        new SimpleGrantedAuthority("USER"),
+                        new SimpleGrantedAuthority("ADMIN")
                 )
         );
 
@@ -59,6 +59,6 @@ class TokenServiceTest {
 
         assertThat(passedClaims.getClaimAsString("iss")).isEqualTo("self");
         assertThat(passedClaims.getSubject()).isEqualTo("jdoe");
-        assertThat(passedClaims.getClaim("scope").toString()).isEqualTo("ROLE_USER ROLE_ADMIN");
+        assertThat(passedClaims.getClaim(TokenService.ROLES_CLAIM_NAME).toString()).isEqualTo("USER ADMIN");
     }
 }
