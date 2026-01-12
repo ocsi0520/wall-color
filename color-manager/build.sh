@@ -20,8 +20,11 @@ echo -e "${GREEN_COLOR}Built $SPRING_IMAGE_NAME${NO_COLOR}"
 podman run \
     -d \
     --name $SPRING_CONTAINER_NAME \
+    --network wall-color-net \
     -p ${PORT}:${PORT} \
+    --env-file=".env" \
     -e APP_PORT=${PORT} \
+    -e POSTGRES_PATH=wall-color-postgres-container:5432 \
     $SPRING_IMAGE_NAME
 
 echo -e "${GREEN_COLOR}$SPRING_CONTAINER_NAME is running on port $PORT${NO_COLOR}"

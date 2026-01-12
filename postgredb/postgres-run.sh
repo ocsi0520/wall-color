@@ -7,6 +7,8 @@ sudo rm -rf ./volume/;
 podman build -t wall-color-postgres-image .;
 mkdir volume && \
 podman run -d --name wall-color-postgres-container \
+    --network wall-color-net \
     --env-file=".env" \
     -v ./volume:/var/lib/postgresql \
-    -p 5432:5432 wall-color-postgres-image
+    -p 5432:5432 \
+    wall-color-postgres-image
