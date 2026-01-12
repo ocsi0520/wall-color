@@ -20,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ColorService {
     private final ColorRepository colorRepository;
     private final UserRepository userRepository;
@@ -38,7 +39,6 @@ public class ColorService {
         return colorRepository.save(newColor);
     }
 
-    @Transactional
     public void deleteColorBy(int id) throws NoSuchElementException {
         var color = colorRepository.requiredById(id);
         colorRepository.removeBy(color.getId());
