@@ -1,2 +1,4 @@
 .env
 volume
+.vscode
+local-postgre.session.sql
