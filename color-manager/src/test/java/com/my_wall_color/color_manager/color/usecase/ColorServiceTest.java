@@ -61,6 +61,7 @@ class ColorServiceTest {
     void shouldThrowAsNoUserWasFound() {
         var request = ColorCreationRequest.of(0, 0, 0, "black");
         when(userRepository.findByUsername(jdoe.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.requiredByUsername(jdoe.getUsername())).thenCallRealMethod();
         assertThrows(NoSuchElementException.class, () -> unitUnderTest.createColor(request, jdoe.getUsername()));
     }
 
@@ -69,6 +70,7 @@ class ColorServiceTest {
         var request = ColorCreationRequest.of(0, 0, 0, "black");
         var expectedColor = Color.create(1, 0, 0, 0, "black", jdoe.getId());
         when(userRepository.findByUsername(jdoe.getUsername())).thenReturn(Optional.of(jdoe));
+        when(userRepository.requiredByUsername(jdoe.getUsername())).thenCallRealMethod();
         ArgumentCaptor<Color> captor = ArgumentCaptor.forClass(Color.class);
 
         when(colorRepository.save(captor.capture())).thenReturn(expectedColor);

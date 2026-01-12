@@ -33,8 +33,7 @@ public class ColorService {
     }
 
     public Color createColor(ColorCreationRequest request, String name) throws NoSuchElementException, DataIntegrityViolationException, IllegalArgumentException {
-        Optional<User> foundUser = userRepository.findByUsername(name);
-        User creator = foundUser.orElseThrow(() -> new NoSuchElementException("No user is found with username:" + name));
+        User creator = userRepository.requiredByUsername(name);
         Color newColor = Color.create(null, request.red(), request.green(), request.blue(), request.name(), creator.getId());
         return colorRepository.save(newColor);
     }
@@ -47,16 +46,14 @@ public class ColorService {
 
     // TODO: unit test
     public List<Color> getAllAssignedColorsFor(String username) throws NoSuchElementException {
-        var user = userRepository.findByUsername(username);
-        if (user.isEmpty()) throw new NoSuchElementException("No user was found with username: " + username);
-        return colorRepository.findAllAssociatedWith(user.get().getId());
+        var user = userRepository.requiredByUsername(username);
+        return colorRepository.findAllAssociatedWith(user.getId());
     }
 
     // TODO: unit test
     public void assignColorToUser(int colorId, String username) throws ColorAlreadyAssignedException, NoSuchElementException, DataIntegrityViolationException {
-        var user = userRepository.findByUsername(username);
-        if (user.isEmpty()) throw new NoSuchElementException("No user was found with username: " + username);
-        Integer userId = user.get().getId();
+        var user = userRepository.requiredByUsername(username);
+        Integer userId = user.getId();
 
         var color = colorRepository.findById(colorId);
         if (color.isEmpty()) throw new NoSuchElementException("No color was found with id: " + colorId);
@@ -73,9 +70,8 @@ public class ColorService {
 
     // TODO: unit test
     public void removeAssignmentFromUser(int colorId, String username) throws NoSuchElementException {
-        var user = userRepository.findByUsername(username);
-        if (user.isEmpty()) throw new NoSuchElementException("No user was found with username: " + username);
-        Integer userId = user.get().getId();
+        var user = userRepository.requiredByUsername(username);
+        Integer userId = user.getId();
 
         var color = colorRepository.findById(colorId);
         if (color.isEmpty()) throw new NoSuchElementException("No color was found with id: " + colorId);
