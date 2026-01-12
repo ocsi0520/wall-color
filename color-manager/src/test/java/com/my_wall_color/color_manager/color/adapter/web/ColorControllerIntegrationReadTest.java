@@ -9,11 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.test.context.NestedTestConfiguration;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -22,8 +20,6 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@NestedTestConfiguration(NestedTestConfiguration.EnclosingConfiguration.INHERIT)
 class ColorControllerIntegrationReadTest extends IntegrationTest {
     @Autowired
     TestRestTemplate restTemplate;
