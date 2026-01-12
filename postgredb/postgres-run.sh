@@ -8,5 +8,5 @@ podman build -t wall-color-postgres-image .;
 mkdir volume && \
 podman run -d --name wall-color-postgres-container \
     --env-file=".env" \
-    -v ./volume:/var/lib/postgresql/data \
+    -v ./volume:/var/lib/postgresql \
     -p 5432:5432 wall-color-postgres-image
