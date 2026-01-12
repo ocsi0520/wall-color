@@ -1,0 +1,40 @@
+# =========================
+# Stage 1: Build Angular app
+# =========================
+FROM node:25-alpine AS build
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependency files first (better layer caching)
+COPY ../package.json ../package-lock.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy the rest of the source code
+COPY .. .
+
+# Build the Angular app (adjust if you use a different config)
+RUN npm run build -- --configuration production
+
+
+# =========================
+# Stage 2: Nginx runtime
+# =========================
+FROM nginx:1.25-alpine
+
+# Default (can be overridden)
+ENV NGINX_PORT=4200
+
+# Remove default nginx static assets
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy compiled Angular output from build stage
+# Replace "your-app-name" with the value from angular.json -> outputPath
+COPY --from=build /app/dist /usr/share/nginx/html
+
+COPY deployment/nginx.conf.template /etc/nginx/templates/default.conf.template
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
