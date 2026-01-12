@@ -18,7 +18,7 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": {
-              "base": "../color-manager/src/main/resources/frontend",
+              "base": "./dist",
               "browser": ""
             },
 
