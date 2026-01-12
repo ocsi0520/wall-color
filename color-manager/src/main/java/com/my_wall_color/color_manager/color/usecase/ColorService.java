@@ -40,8 +40,8 @@ public class ColorService {
 
     @Transactional
     public void deleteColorBy(int id) throws NoSuchElementException {
-        if (colorRepository.findById(id).isEmpty()) throw new NoSuchElementException();
-        colorRepository.removeBy(id);
+        var color = colorRepository.requiredById(id);
+        colorRepository.removeBy(color.getId());
     }
 
     // TODO: unit test
@@ -55,8 +55,7 @@ public class ColorService {
         var user = userRepository.requiredByUsername(username);
         Integer userId = user.getId();
 
-        var color = colorRepository.findById(colorId);
-        if (color.isEmpty()) throw new NoSuchElementException("No color was found with id: " + colorId);
+        var color = colorRepository.requiredById(colorId);
 
         List<Color> allAssociatedColor = colorRepository.findAllAssociatedWith(userId);
         var alreadyAssigned = allAssociatedColor.stream().anyMatch(foundColor -> foundColor.getId().equals(colorId));
@@ -65,7 +64,7 @@ public class ColorService {
         if (allAssociatedColor.size() >= 7)
             throw new DataIntegrityViolationException("Maximum 7 colors can be assigned to a user");
 
-        colorRepository.assignToUser(color.get(), userId);
+        colorRepository.assignToUser(color, userId);
     }
 
     // TODO: unit test
@@ -73,12 +72,11 @@ public class ColorService {
         var user = userRepository.requiredByUsername(username);
         Integer userId = user.getId();
 
-        var color = colorRepository.findById(colorId);
-        if (color.isEmpty()) throw new NoSuchElementException("No color was found with id: " + colorId);
+        var color = colorRepository.requiredById(colorId);
 
         var isAssigned = colorRepository.findAllAssociatedWith(userId).stream().anyMatch(foundColor -> foundColor.getId().equals(colorId));
         if (!isAssigned) throw new NoSuchElementException("Color was not assigned to user");
 
-        colorRepository.removeAssignment(color.get(), userId);
+        colorRepository.removeAssignment(color, userId);
     }
 }
