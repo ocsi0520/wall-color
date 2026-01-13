@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  angular-app:
+    build:
+      context: ..
+      dockerfile: deployment/Containerfile.dev
+    volumes:
+      - ..:/app
+      - /app/node_modules
+    ports:
+      - "4200:4200"
