@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: deployment/Containerfile.local
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount the local source code for hot reload
+      - ../src:/app/src:Z
+      - ../target:/app/target:Z
+      - ../pom.xml:/app/pom.xml:Z
+      - ../.mvn:/app/.mvn:Z
+      - ../mvnw:/app/mvnw:Z
+    networks:
+      - wall-color-net
+    env_file:
+      - ../.env
+    environment:
+      - POSTGRES_PATH=wall-color-postgres-container:5432
+    tty: true
+
+networks:
+  wall-color-net:
+    external: true
