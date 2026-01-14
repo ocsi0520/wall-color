@@ -16,8 +16,6 @@ services:
       - ./color-manager/pom.xml:/app/pom.xml:Z
       - ./color-manager/.mvn:/app/.mvn:Z
       - ./color-manager/mvnw:/app/mvnw:Z
-    networks:
-      - wall-color-net
     env_file:
       - color-manager/.env
     environment:

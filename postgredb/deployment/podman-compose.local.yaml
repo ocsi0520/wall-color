@@ -11,8 +11,6 @@ services:
       - "5432:5432"
     volumes:
       - ./postgredb/volume:/var/lib/postgresql
-    networks:
-      - wall-color-net
     env_file:
       - ./postgredb/.env
     tty: true
