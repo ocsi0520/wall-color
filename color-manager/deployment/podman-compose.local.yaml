@@ -3,25 +3,25 @@ version: "3.9"
 services:
   backend:
     build:
-      context: ..
+      context: ./color-manager
       dockerfile: deployment/Containerfile.local
+    image: wall-color-backend-image
+    container_name: wall-color-backend
     ports:
       - "8080:8080"
     volumes:
       # Mount the local source code for hot reload
-      - ../src:/app/src:Z
-      - ../target:/app/target:Z
-      - ../pom.xml:/app/pom.xml:Z
-      - ../.mvn:/app/.mvn:Z
-      - ../mvnw:/app/mvnw:Z
+      - ./color-manager/src:/app/src:Z
+      - ./color-manager/target:/app/target:Z
+      - ./color-manager/pom.xml:/app/pom.xml:Z
+      - ./color-manager/.mvn:/app/.mvn:Z
+      - ./color-manager/mvnw:/app/mvnw:Z
     networks:
       - wall-color-net
     env_file:
-      - ../.env
+      - color-manager/.env
     environment:
-      - POSTGRES_PATH=wall-color-postgres:5432
+      - POSTGRES_PATH=postgre:5432
+    depends_on:
+      - postgre
     tty: true
-
-networks:
-  wall-color-net:
-    external: true
