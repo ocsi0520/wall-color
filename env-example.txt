@@ -1,5 +1,5 @@
-Include a .env file next to project-compose.local.yaml
-file with a similar content:
+# Include a .env file next to project-compose.local.yaml
+# file with a similar content:
 
 # DB & Spring boot
 POSTGRES_USER=admin
