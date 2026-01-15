@@ -5,7 +5,7 @@ services:
     build:
       context: ./postgresdb
       dockerfile: deployment/Containerfile.local
-    image: wall-color-postgres-image
+    image: wall-color-postgres-image:local
     container_name: wall-color-postgres
     ports:
       - "5432:5432"
