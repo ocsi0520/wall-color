@@ -1,2 +1,5 @@
 .env
 .pem
+.vscode
+.idea
+local-*.sql
