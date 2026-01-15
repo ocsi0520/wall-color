@@ -2,7 +2,7 @@
 
 CMD="podman-compose \
   -f project-compose.local.yaml \
-  -f ./postgredb/deployment/podman-compose.local.yaml \
+  -f ./postgresdb/deployment/podman-compose.local.yaml \
   -f ./color-manager/deployment/podman-compose.local.yaml \
   -f ./color-angular-frontend/deployment/podman-compose.local.yaml"
 

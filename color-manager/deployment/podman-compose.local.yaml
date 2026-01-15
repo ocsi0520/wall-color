@@ -17,12 +17,12 @@ services:
       - ./color-manager/.mvn:/app/.mvn:Z
       - ./color-manager/mvnw:/app/mvnw:Z
     environment:
-      POSTGRES_PATH: postgre:5432
+      POSTGRES_PATH: postgres:5432
       POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is not set}
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is not set}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not set}
       TOKEN_COOKIE_DOMAIN: ${TOKEN_COOKIE_DOMAIN:?TOKEN_COOKIE_DOMAIN is not set}
       TOKEN_MAX_AGE_SECONDS: ${TOKEN_MAX_AGE_SECONDS:?TOKEN_MAX_AGE_SECONDS is not set}
     depends_on:
-      - postgre
+      - postgres
     tty: true

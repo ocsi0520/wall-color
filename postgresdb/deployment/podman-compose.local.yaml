@@ -1,16 +1,16 @@
 version: "3.9"
 
 services:
-  postgre:
+  postgres:
     build:
-      context: ./postgredb
+      context: ./postgresdb
       dockerfile: deployment/Containerfile.local
-    image: wall-color-postgre-image
-    container_name: wall-color-postgre
+    image: wall-color-postgres-image
+    container_name: wall-color-postgres
     ports:
       - "5432:5432"
     volumes:
-      - ./postgredb/volume:/var/lib/postgresql
+      - ./postgresdb/volume:/var/lib/postgresql
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is not set}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is not set}
