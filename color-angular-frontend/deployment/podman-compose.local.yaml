@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  frontend:
+    build:
+      context: ./color-angular-frontend
+      dockerfile: deployment/Containerfile.local
+    image: wall-color-frontend-image:local
+    container_name: wall-color-frontend
+    volumes:
+      - ./color-angular-frontend:/app
+      - /app/node_modules
+    ports:
+      - '4200:4200'

@@ -1,0 +1,46 @@
+# Node / Angular
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build output (rebuilt inside container)
+dist
+tmp
+out-tsc
+
+# Tests & coverage
+coverage
+cypress
+*.spec.ts
+
+# VCS
+.git
+.gitignore
+
+# IDEs / editors
+.vscode
+.idea
+*.swp
+*.swo
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env & secrets
+.env
+.env.*
+
+# Documentation
+README.md
+*.md
+
+# Local tooling
+.angular
+.cache
+
+# Container artifacts (optional)
+deployment/*.log

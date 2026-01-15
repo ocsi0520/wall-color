@@ -1,0 +1,11 @@
+# Include a .env file next to project-compose.local.yaml
+# file with a similar content:
+
+# DB & Spring boot
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=my_secret_password
+POSTGRES_DB=appdb
+
+# spring boot
+TOKEN_COOKIE_DOMAIN=localhost
+TOKEN_MAX_AGE_SECONDS=3600
