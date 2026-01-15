@@ -4,9 +4,14 @@ import com.my_wall_color.color_manager.AuthTestHelper;
 import com.my_wall_color.color_manager.IntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,31 +44,34 @@ class SecurityConfigIntegrationTest extends IntegrationTest {
 
     @Test
     void shouldSucceedApiCallWithCorrectToken() {
-        var invalidAuthIncludedHeaders = authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe);
-        var entity = new HttpEntity<>(invalidAuthIncludedHeaders);
+        var validAuthIncludedHeaders = authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe);
+        var entity = new HttpEntity<>(validAuthIncludedHeaders);
         ResponseEntity<String> response = restTemplate.exchange("/api/asd", HttpMethod.GET, entity, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo("asd");
     }
 
-    @Test
-    void shouldFetchStaticFileWithoutToken() {
-        var iconResponse = restTemplate.getForEntity("/favicon.ico", String.class);
-        assertThat(iconResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(iconResponse.getHeaders().getContentType().getType()).isEqualTo("image");
+    static Stream<Arguments> getOldFrontendEndpoints() {
+        return Stream.of(
+                Arguments.of("/favicon.ico"),
+                Arguments.of("/"),
+                Arguments.of("/dummy/route")
+        );
     }
 
-    @Test
-    void shouldFetchFrontendFromRootWithoutToken() {
-        var rootResponse = restTemplate.getForEntity("/", String.class);
-        assertThat(rootResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(rootResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
+    @ParameterizedTest
+    @MethodSource("getOldFrontendEndpoints")
+    void shouldBlockOldFrontendEndpointsWithoutToken(String path) {
+        var responseToOldEndpoint = restTemplate.getForEntity(path, String.class);
+        assertThat(responseToOldEndpoint.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
-    @Test
-    void shouldFetchFrontendWithRouteWithoutToken() {
-        var frontendRouteResponse = restTemplate.getForEntity("/dummy/route", String.class);
-        assertThat(frontendRouteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(frontendRouteResponse.getHeaders().getContentType().includes(MediaType.TEXT_HTML)).isTrue();
+    @ParameterizedTest
+    @MethodSource("getOldFrontendEndpoints")
+    void shouldReturnNotFoundForFrontendEndpointsWithToken(String path) {
+        var validAuthIncludedHeaders = authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe);
+        var entity = new HttpEntity<>(validAuthIncludedHeaders);
+        ResponseEntity<String> responseToOldEndpoint = restTemplate.exchange(path, HttpMethod.GET, entity, String.class);
+        assertThat(responseToOldEndpoint.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
