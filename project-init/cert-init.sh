@@ -5,28 +5,22 @@
 
 
 REV_PROXY_DEP_DIR="$1"
-LOCALHOST_CRT="$2"
-LOCALHOST_KEY="$3"
 
-TMP_CONF_CONTENT="
-[dn]
-CN=localhost
-[req]
-distinguished_name=dn
-[EXT]
-subjectAltName=DNS:localhost
-keyUsage=digitalSignature
-extendedKeyUsage=serverAuth
-"
+DEV_CA="$REV_PROXY_DEP_DIR/devCA"
+LOCALHOST="$REV_PROXY_DEP_DIR/localhost"
 
-TMP_CONF_FILE=$(mktemp)
-printf "%s\n" "$TMP_CONF_CONTENT" >> "$TMP_CONF_FILE"
 
-openssl req -x509 -out "$LOCALHOST_CRT" -keyout "$LOCALHOST_KEY" \
--newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' \
--extensions EXT -config "$TMP_CONF_FILE"
+mkdir -p $REV_PROXY_DEP_DIR
 
-chmod +r $LOCALHOST_CRT
-chmod +r $LOCALHOST_KEY
+# 1. Create dev CA
+openssl genrsa -out "${DEV_CA}.key" 4096
+openssl req -x509 -new -nodes -key "${DEV_CA}.key" -sha256 -days 1024 -out "${DEV_CA}.crt" -subj "/CN=Local Dev CA"
 
-rm "$TMP_CONF_FILE"
+# 2. Create localhost cert signed by dev CA
+openssl genrsa -out "${LOCALHOST}.key" 2048
+openssl req -new -key "${LOCALHOST}.key" -out "${LOCALHOST}.csr" -subj "/CN=localhost"
+openssl x509 -req -in "${LOCALHOST}.csr" -CA "${DEV_CA}.crt" -CAkey "${DEV_CA}.key" -CAcreateserial \
+  -out "${LOCALHOST}.crt" -days 365 -sha256
+
+
+chmod a+r "$REV_PROXY_DEP_DIR"/*

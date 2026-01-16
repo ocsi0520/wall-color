@@ -5,3 +5,5 @@
 local-*.sql
 *.crt
 *.key
+*.srl
+*.csr

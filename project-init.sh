@@ -51,15 +51,13 @@ else
 fi
 
 
-REV_PROXY_DEP_DIR="./reverse-proxy/deployment"
-LOCALHOST_CRT="$REV_PROXY_DEP_DIR/localhost.crt"
-LOCALHOST_KEY="$REV_PROXY_DEP_DIR/localhost.key"
+REV_PROXY_DEP_DIR="./reverse-proxy/deployment/certs"
 
-if ! [ -f $LOCALHOST_CRT ] || ! [ -f $LOCALHOST_KEY ]; then
+if ! [ -d $REV_PROXY_DEP_DIR ]; then
     echo "cert for reverse-proxy is not initialized, about to generate"
     CERT_INIT_FILE="./project-init/cert-init.sh"
     if ask_allow_vibe_code "$CERT_INIT_FILE"; then
-        sh "$CERT_INIT_FILE" "$REV_PROXY_DEP_DIR" "$LOCALHOST_CRT" "$LOCALHOST_KEY"
+        sh "$CERT_INIT_FILE" "$REV_PROXY_DEP_DIR"
     else
         echo "make sure cert is generated"
     fi

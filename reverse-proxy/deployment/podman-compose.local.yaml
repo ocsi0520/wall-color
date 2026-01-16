@@ -2,12 +2,17 @@ version: "3.9"
 
 services:
   reverse-proxy:
+    build:
+      context: ./reverse-proxy
+      dockerfile: deployment/Containerfile.local
     container_name: wall-color-reverse-proxy
-    image: nginx:alpine
     depends_on:
       - backend
       - frontend
     ports:
-      - "2000:80"
+      - "2000:2000/tcp"
+      - "2000:2000/udp"
     volumes:
-      - ./reverse-proxy/deployment/reverse-proxy.conf:/etc/nginx/nginx.conf:ro
+      - ./reverse-proxy/deployment/reverse-proxy.conf:/etc/nginx/nginx.conf:ro,Z
+      - ./reverse-proxy/deployment/certs/localhost.key:/etc/ssl/private/localhost.key:ro,Z
+      - ./reverse-proxy/deployment/certs/localhost.crt:/etc/ssl/certs/localhost.crt:ro,Z
