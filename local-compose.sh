@@ -11,6 +11,7 @@ fi
 
 CMD_WITH_YAMLS="${COMPOSE_CMD} \
   -f project-compose.local.yaml \
+  -f ./reverse-proxy/deployment/podman-compose.local.yaml \
   -f ./postgresdb/deployment/podman-compose.local.yaml \
   -f ./color-manager/deployment/podman-compose.local.yaml \
   -f ./color-angular-frontend/deployment/podman-compose.local.yaml"
