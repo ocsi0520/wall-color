@@ -69,7 +69,7 @@ class AuthenticationControllerIntegrationTest extends IntegrationTest {
 
         var cookieParts = tokenCookieContent.split("; ");
         assertThat(cookieParts.length).isGreaterThanOrEqualTo(3);
-        assertThat(cookieParts).contains("Max-Age=" + EXPECTED_MAX_AGE_IN_SECONDS, "HttpOnly", "Domain=mozilla.org");
+        assertThat(cookieParts).contains("Max-Age=" + EXPECTED_MAX_AGE_IN_SECONDS, "Secure", "HttpOnly", "Domain=mozilla.org");
         assertThat(cookieParts[0]).matches(TOKEN_COOKIE_NAME + '=' + JWT_REGEXP_PATTERN);
     }
 }
