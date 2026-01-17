@@ -2,8 +2,8 @@ package com.my_wall_color.color_manager.shared.sorting_and_pagination.domain;
 
 import java.util.Objects;
 
-public record SortOrder<EnumValue extends Enum<EnumValue>>(EnumValue fieldProvider,
-                                                           Direction direction) {
+public record SortOrder<FieldT extends Enum<FieldT>>(FieldT fieldProvider,
+                                                     Direction direction) {
   public enum Direction { ASCENDING, DESCENDING; }
 
   // Only key is used for equality

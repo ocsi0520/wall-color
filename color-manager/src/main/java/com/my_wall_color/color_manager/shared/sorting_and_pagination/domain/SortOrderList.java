@@ -5,25 +5,25 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class SortOrderList<AFieldProvider extends Enum<AFieldProvider>> {
-  private final LinkedHashSet<SortOrder<AFieldProvider>> orderedList = new LinkedHashSet<>();
+public class SortOrderList<FieldT extends Enum<FieldT>> {
+  private final LinkedHashSet<SortOrder<FieldT>> orderedList = new LinkedHashSet<>();
 
-  public static <AFieldProvider extends Enum<AFieldProvider>> SortOrderList<AFieldProvider>
-  of(Collection<SortOrder<AFieldProvider>> sortOrders) {
+  public static <FieldT extends Enum<FieldT>> SortOrderList<FieldT> of(
+      Collection<SortOrder<FieldT>> sortOrders) {
     return new SortOrderList<>(sortOrders);
   }
 
   @SafeVarargs
-  public static <AFieldProvider extends Enum<AFieldProvider>> SortOrderList<AFieldProvider>
-  of(SortOrder<AFieldProvider>... sortOrders) {
+  public static <FieldT extends Enum<FieldT>> SortOrderList<FieldT> of(
+      SortOrder<FieldT>... sortOrders) {
     return of(Arrays.stream(sortOrders).toList());
   }
 
-  private SortOrderList(Collection<SortOrder<AFieldProvider>> sortOrders) {
+  private SortOrderList(Collection<SortOrder<FieldT>> sortOrders) {
     orderedList.addAll(sortOrders);
   }
 
-  public final List<SortOrder<AFieldProvider>> getOrderList() {
+  public final List<SortOrder<FieldT>> getOrderList() {
     return orderedList.stream().toList();
   }
 }
