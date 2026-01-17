@@ -19,7 +19,7 @@ public class Color {
     private Integer recordedBy;
 
     public static Color create(Integer id, int red, int green, int blue, String name, Integer recordedBy) throws IllegalArgumentException {
-        return Color.create(id, (short) red, (short) green, (short) blue, name, recordedBy);
+        return create(id, (short) red, (short) green, (short) blue, name, recordedBy);
     }
 
     public static Color create(Integer id, short red, short green, short blue, String name, Integer recordedBy) throws IllegalArgumentException {
