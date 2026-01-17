@@ -5,7 +5,7 @@ import com.my_wall_color.color_manager.color.domain.ColorCreationRequest;
 import com.my_wall_color.color_manager.color.domain.ColorField;
 import com.my_wall_color.color_manager.color.usecase.ColorService;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.web.WebSortAndPaginationMapper;
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDto;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import java.net.URI;
 import java.security.Principal;
@@ -66,7 +66,7 @@ public class ColorController {
   }
 
   @GetMapping
-  public ResponseEntity<PageDTO<Color>> getAllColors(Pageable pageable) {
+  public ResponseEntity<PageDto<Color>> getAllColors(Pageable pageable) {
     // TODO: this is a separate concern to normalize page requests
     var normalizedPageRequest = PageRequest.of(
         Math.min(pageable.getPageNumber(), maxPageIndex),
@@ -75,7 +75,7 @@ public class ColorController {
     );
     SortAndPagination<ColorField> SortAndPaginationInfo =
         sortAndPaginationMapper.map(normalizedPageRequest);
-    PageDTO<Color> page = colorService.findAll(SortAndPaginationInfo);
+    PageDto<Color> page = colorService.findAll(SortAndPaginationInfo);
     return ResponseEntity.ok(page);
   }
 }

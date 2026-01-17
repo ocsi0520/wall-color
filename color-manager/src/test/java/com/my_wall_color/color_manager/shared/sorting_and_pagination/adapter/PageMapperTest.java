@@ -1,6 +1,6 @@
 package com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter;
 
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDto;
 import com.my_wall_color.color_manager.user.UserFixture;
 import com.my_wall_color.color_manager.user.domain.User;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class PageMapperTest {
         Page<User> input = new PageImpl<>(listOfUsers, PageRequest.of(4, 3), 7);
         var unitUnderTest = new PageMapper();
         var actual = unitUnderTest.toDomain(input);
-        var expected = new PageDTO<>(listOfUsers, 4, 3, 7, 3);
+        var expected = new PageDto<>(listOfUsers, 4, 3, 7, 3);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -30,7 +30,7 @@ class PageMapperTest {
         Page<User> input = new PageImpl<>(listOfUsers, PageRequest.of(0, 3), 5);
         var unitUnderTest = new PageMapper();
         var actual = unitUnderTest.toDomain(input);
-        var expected = new PageDTO<>(listOfUsers, 0, 3, 5, 2);
+        var expected = new PageDto<>(listOfUsers, 0, 3, 5, 2);
         assertThat(actual).isEqualTo(expected);
     }
 }

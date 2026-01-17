@@ -3,7 +3,7 @@ package com.my_wall_color.color_manager.color.adapter.web;
 import com.my_wall_color.color_manager.AuthTestHelper;
 import com.my_wall_color.color_manager.IntegrationTest;
 import com.my_wall_color.color_manager.color.domain.Color;
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDto;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,23 +72,23 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
     @Test
     public void shouldReturnLast3ColorsByName() {
         var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
-        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange("/api/color?page=0&size=3&sort=name,desc", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
+        ResponseEntity<PageDto<Color>> response = restTemplate.exchange("/api/color?page=0&size=3&sort=name,desc", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
         });
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
         var expectedContent = List.of(colorFixture.szarkalab, colorFixture.sulyom, colorFixture.palastfu);
-        var expected = new PageDTO<>(expectedContent, 0, 3, 8, 3);
+        var expected = new PageDto<>(expectedContent, 0, 3, 8, 3);
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     public void shouldReturnDefaultPage() {
         var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
-        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange("/api/color", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
+        ResponseEntity<PageDto<Color>> response = restTemplate.exchange("/api/color", HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
         });
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsInInsertionOrder(), 0, 20, 8, 1);
+        var expected = new PageDto<>(getAllColorsInInsertionOrder(), 0, 20, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -96,13 +96,13 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
     public void shouldHandleTooBigPage() {
         var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
         var searchQuery = generateSearchQuery(0, Integer.MAX_VALUE, "name,desc");
-        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange(
+        ResponseEntity<PageDto<Color>> response = restTemplate.exchange(
                 "/api/color" + searchQuery, HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
                 }
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsSortedByName().reversed(), 0, 100, 8, 1);
+        var expected = new PageDto<>(getAllColorsSortedByName().reversed(), 0, 100, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -124,13 +124,13 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
         );
 
 
-        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange(
+        ResponseEntity<PageDto<Color>> response = restTemplate.exchange(
                 "/api/color" + suspiciousSearchQuery, HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
                 }
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(getAllColorsInInsertionOrder().reversed(), 0, 20, 8, 1);
+        var expected = new PageDto<>(getAllColorsInInsertionOrder().reversed(), 0, 20, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -151,13 +151,13 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
                 "name,asc",
                 "id,desc"
         );
-        ResponseEntity<PageDTO<Color>> response = restTemplate.exchange(
+        ResponseEntity<PageDto<Color>> response = restTemplate.exchange(
                 "/api/color" + suspiciousSearchQuery, HttpMethod.GET, entity, new ParameterizedTypeReference<>() {
                 }
         );
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var actual = response.getBody();
-        var expected = new PageDTO<>(List.of(), maxPageIndex, 100, 8, 1);
+        var expected = new PageDto<>(List.of(), maxPageIndex, 100, 8, 1);
         assertThat(actual).isEqualTo(expected);
     }
 

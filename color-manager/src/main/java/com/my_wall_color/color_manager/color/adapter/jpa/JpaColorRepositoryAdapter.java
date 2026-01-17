@@ -8,7 +8,7 @@ import com.my_wall_color.color_manager.color.domain.ColorField;
 import com.my_wall_color.color_manager.color.domain.ColorRepository;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.PageMapper;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.adapter.jpa.JpaSortAndPaginationMapper;
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDto;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +51,7 @@ public class JpaColorRepositoryAdapter implements ColorRepository {
   }
 
   @Override
-  public PageDTO<Color> findAll(SortAndPagination<ColorField> sortAndPagination) {
+  public PageDto<Color> findAll(SortAndPagination<ColorField> sortAndPagination) {
     Pageable mappedSap = sapMapper.map(sortAndPagination);
     Page<JpaColor> jpaColorPage = implementation.findAll(mappedSap);
     Page<Color> mappedContentPage = jpaColorPage.map(colorMapper::toDomain);

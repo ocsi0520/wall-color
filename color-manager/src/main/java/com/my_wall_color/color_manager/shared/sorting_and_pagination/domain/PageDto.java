@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PageDTO<T> {
+public class PageDto<T> {
   private List<T> content;
   private int number;
   private int size;

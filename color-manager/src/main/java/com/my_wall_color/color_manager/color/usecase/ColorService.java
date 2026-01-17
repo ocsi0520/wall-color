@@ -5,7 +5,7 @@ import com.my_wall_color.color_manager.color.domain.Color;
 import com.my_wall_color.color_manager.color.domain.ColorCreationRequest;
 import com.my_wall_color.color_manager.color.domain.ColorField;
 import com.my_wall_color.color_manager.color.domain.ColorRepository;
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDto;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import com.my_wall_color.color_manager.user.domain.User;
 import com.my_wall_color.color_manager.user.domain.UserRepository;
@@ -28,7 +28,7 @@ public class ColorService {
     return colorRepository.findById(colorId);
   }
 
-  public PageDTO<Color> findAll(SortAndPagination<ColorField> sortAndPaginationInfo) {
+  public PageDto<Color> findAll(SortAndPagination<ColorField> sortAndPaginationInfo) {
     return colorRepository.findAll(sortAndPaginationInfo);
   }
 

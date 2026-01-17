@@ -4,7 +4,7 @@ import com.my_wall_color.color_manager.color.domain.Color;
 import com.my_wall_color.color_manager.color.domain.ColorCreationRequest;
 import com.my_wall_color.color_manager.color.domain.ColorField;
 import com.my_wall_color.color_manager.color.domain.ColorRepository;
-import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDTO;
+import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.PageDto;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortAndPagination;
 import com.my_wall_color.color_manager.shared.sorting_and_pagination.domain.SortOrderList;
 import com.my_wall_color.color_manager.user.UserFixture;
@@ -49,7 +49,7 @@ class ColorServiceTest {
 
     @Test
     void shouldDelegateFindAllToRepository() {
-        var expectedPage = new PageDTO<Color>(List.of(), 0, 10, 0, 0);
+        var expectedPage = new PageDto<Color>(List.of(), 0, 10, 0, 0);
         SortOrderList<ColorField> colorFieldSortOrderList = SortOrderList.of();
         SortAndPagination<ColorField> sortAndPagination = new SortAndPagination<>(10, 0, colorFieldSortOrderList);
         when(colorRepository.findAll(sortAndPagination)).thenReturn(expectedPage);
