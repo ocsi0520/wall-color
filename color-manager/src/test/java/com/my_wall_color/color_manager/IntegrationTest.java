@@ -8,29 +8,28 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @DirtiesContext
 @Testcontainers(parallel = true)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class IntegrationTest {
 
-    @Container
-    protected static final PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>("postgres:18-alpine");
+  @Container
+  protected static final PostgreSQLContainer<?> postgres =
+      new PostgreSQLContainer<>("postgres:18-alpine");
 
-    @DynamicPropertySource
-    static void configure(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
+  @DynamicPropertySource
+  static void configure(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", postgres::getJdbcUrl);
+    registry.add("spring.datasource.username", postgres::getUsername);
+    registry.add("spring.datasource.password", postgres::getPassword);
+  }
 
-    @Autowired
-    protected ColorFixture colorFixture;
+  @Autowired
+  protected ColorFixture colorFixture;
 
-    @Autowired
-    protected UserFixture userFixture;
+  @Autowired
+  protected UserFixture userFixture;
 }
