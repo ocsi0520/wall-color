@@ -33,7 +33,7 @@ public class JpaSortAndPaginationMapper<F extends Enum<F>> {
   }
 
   private Sort.Order mapSortOrderFromDomain(SortOrder<F> sortOrder) {
-    String jpaFieldName = enumToColumnMapper.mapEnumToJpaColumn(sortOrder.fieldProvider());
+    String jpaFieldName = enumToColumnMapper.mapEnumToJpaColumn(sortOrder.field());
     Sort.Direction sortDirection = mapSortDirection(sortOrder.direction());
     return new Sort.Order(sortDirection, jpaFieldName);
   }

@@ -73,9 +73,9 @@ public class ColorController {
         pageable.getPageSize(),
         pageable.getSort()
     );
-    SortAndPagination<ColorField> SortAndPaginationInfo =
+    SortAndPagination<ColorField> sortAndPaginationInfo =
         sortAndPaginationMapper.map(normalizedPageRequest);
-    PageDto<Color> page = colorService.findAll(SortAndPaginationInfo);
+    PageDto<Color> page = colorService.findAll(sortAndPaginationInfo);
     return ResponseEntity.ok(page);
   }
 }
