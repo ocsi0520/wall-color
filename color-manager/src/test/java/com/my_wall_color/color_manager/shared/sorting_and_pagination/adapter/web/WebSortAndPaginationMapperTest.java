@@ -24,7 +24,7 @@ class WebSortAndPaginationMapperTest {
     default -> Optional.empty();
   };
 
-  private <T extends Enum<T>> void testEqualityOfSAP(SortAndPagination<T> actual,
+  private <T extends Enum<T>> void testEqualityOfSap(SortAndPagination<T> actual,
                                                      SortAndPagination<T> expected) {
     assertThat(actual.getPageIndex()).isEqualTo(expected.getPageIndex());
     assertThat(actual.getPageSize()).isEqualTo(expected.getPageSize());
@@ -37,7 +37,7 @@ class WebSortAndPaginationMapperTest {
     Pageable pageRequestWithoutSort = PageRequest.of(1, 5);
     var actual = unitUnderTest.map(pageRequestWithoutSort);
     var expected = new SortAndPagination<>(5, 1, expectedDefaultSorting);
-    testEqualityOfSAP(actual, expected);
+    testEqualityOfSap(actual, expected);
   }
 
   @Test
@@ -50,7 +50,7 @@ class WebSortAndPaginationMapperTest {
     var expected = new SortAndPagination<ColorField>(10, 2,
         SortOrderList.of(new SortOrder<>(ColorField.NAME, SortOrder.Direction.DESCENDING))
     );
-    testEqualityOfSAP(actual, expected);
+    testEqualityOfSap(actual, expected);
   }
 
   @Test
@@ -61,7 +61,7 @@ class WebSortAndPaginationMapperTest {
     );
     var actual = unitUnderTest.map(pageRequestWithoutSort);
     var expected = new SortAndPagination<>(10, 2, expectedDefaultSorting);
-    testEqualityOfSAP(actual, expected);
+    testEqualityOfSap(actual, expected);
   }
 
   @Test
@@ -80,7 +80,7 @@ class WebSortAndPaginationMapperTest {
             new SortOrder<>(ColorField.NAME, SortOrder.Direction.DESCENDING)
         )
     );
-    testEqualityOfSAP(actual, expected);
+    testEqualityOfSap(actual, expected);
   }
 
   @Test
@@ -98,7 +98,7 @@ class WebSortAndPaginationMapperTest {
             new SortOrder<>(ColorField.NAME, SortOrder.Direction.DESCENDING)
         )
     );
-    testEqualityOfSAP(actual, expected);
+    testEqualityOfSap(actual, expected);
   }
 
   @Test
@@ -112,7 +112,7 @@ class WebSortAndPaginationMapperTest {
     );
     var actual = unitUnderTest.map(pageRequestWithoutSort);
     var expected = new SortAndPagination<>(30, 3, expectedDefaultSorting);
-    testEqualityOfSAP(actual, expected);
+    testEqualityOfSap(actual, expected);
   }
 
   @Test
@@ -139,6 +139,6 @@ class WebSortAndPaginationMapperTest {
             new SortOrder<>(ColorField.ID, SortOrder.Direction.DESCENDING)
         )
     );
-    testEqualityOfSAP(actual, expected);
+    testEqualityOfSap(actual, expected);
   }
 }

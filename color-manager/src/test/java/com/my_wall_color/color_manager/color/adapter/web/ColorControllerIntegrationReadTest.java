@@ -64,7 +64,6 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
     return "?page=" + pageIndex + "&size=" + pageSize + '&' + sort;
   }
 
-
   @Test
   public void shouldReturnSulyomColor() {
     var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
@@ -149,8 +148,8 @@ class ColorControllerIntegrationReadTest extends IntegrationTest {
   @Test
   public void shouldHandleSecondExploitTryProperly() {
     var entity = new HttpEntity<>(authTestHelper.getAuthIncludedHeadersFor(userFixture.jdoe));
-    int max_int = Integer.MAX_VALUE;
-    var suspiciousSearchQuery = generateSearchQuery(max_int, max_int,
+    int maxInt = Integer.MAX_VALUE;
+    var suspiciousSearchQuery = generateSearchQuery(maxInt, maxInt,
         "id,desc",
         "name,desc",
         "id",

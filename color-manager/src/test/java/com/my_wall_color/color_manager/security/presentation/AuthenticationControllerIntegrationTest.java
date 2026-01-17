@@ -22,7 +22,7 @@ class AuthenticationControllerIntegrationTest extends IntegrationTest {
   private static final String JWT_REGEXP_PATTERN = "((?:\\.?(?:[A-Za-z0-9-_]+)){3})";
 
   @Value("${token.max-age-seconds}")
-  private int EXPECTED_MAX_AGE_IN_SECONDS;
+  private int expectedMaxAgeInSeconds;
 
   @Autowired
   AuthTestHelper authTestHelper;
@@ -56,7 +56,7 @@ class AuthenticationControllerIntegrationTest extends IntegrationTest {
 
     Instant parsedInstant = Instant.parse(body);
     Instant expectedAroundTime =
-        Instant.now(clock).plus(Duration.ofSeconds(EXPECTED_MAX_AGE_IN_SECONDS));
+        Instant.now(clock).plus(Duration.ofSeconds(expectedMaxAgeInSeconds));
 
     assertThat(expectedAroundTime.toEpochMilli() - parsedInstant.toEpochMilli()).isBetween(0L,
         1000L);
@@ -72,7 +72,7 @@ class AuthenticationControllerIntegrationTest extends IntegrationTest {
 
     var cookieParts = tokenCookieContent.split("; ");
     assertThat(cookieParts.length).isGreaterThanOrEqualTo(3);
-    assertThat(cookieParts).contains("Max-Age=" + EXPECTED_MAX_AGE_IN_SECONDS, "Secure", "HttpOnly",
+    assertThat(cookieParts).contains("Max-Age=" + expectedMaxAgeInSeconds, "Secure", "HttpOnly",
         "Domain=mozilla.org");
     assertThat(cookieParts[0]).matches(TOKEN_COOKIE_NAME + '=' + JWT_REGEXP_PATTERN);
   }
