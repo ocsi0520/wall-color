@@ -5,4 +5,5 @@
 <suppressions>
     <suppress checks="Javadoc.*"/>
     <suppress checks="PackageName"/>
+    <suppress checks="AvoidStarImport"/>
 </suppressions>
