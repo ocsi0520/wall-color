@@ -2,10 +2,8 @@ version: "3.9"
 
 services:
   reverse-proxy:
-    build:
-      context: ./reverse-proxy
-      dockerfile: deployment/Containerfile.local
     container_name: wall-color-reverse-proxy
+    image: macbre/nginx-http3:latest
     depends_on:
       - backend
       - frontend

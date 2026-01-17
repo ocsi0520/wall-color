@@ -1,26 +1,43 @@
 #!/bin/sh
 
-# self-certificate command comes from here
-# https://letsencrypt.org/docs/certificates-for-localhost/#making-and-trusting-your-own-certificates
+REV_PROXY_DEP_DIR="./reverse-proxy/deployment/certs"
+LOCALHOST_CRT="$REV_PROXY_DEP_DIR/localhost.crt"
+LOCALHOST_KEY="$REV_PROXY_DEP_DIR/localhost.key"
 
+mkdir $REV_PROXY_DEP_DIR -p
 
-REV_PROXY_DEP_DIR="$1"
+if [ -f $LOCALHOST_CRT ] && [ -f $LOCALHOST_KEY ]; then
+    echo "cert is already initialized for reverse-proxy"
+    exit 0
+fi
 
-DEV_CA="$REV_PROXY_DEP_DIR/devCA"
-LOCALHOST="$REV_PROXY_DEP_DIR/localhost"
+echo "cert for reverse-proxy is not initialized, about to generate"
 
+TMP_CONF_CONTENT="
+[dn]
+CN=localhost
+[req]
+distinguished_name=dn
+[EXT]
+subjectAltName=DNS:localhost
+keyUsage=digitalSignature
+extendedKeyUsage=serverAuth
+"
 
-mkdir -p $REV_PROXY_DEP_DIR
+TMP_CONF_FILE=$(mktemp)
+printf "%s\n" "$TMP_CONF_CONTENT" >> "$TMP_CONF_FILE"
 
-# 1. Create dev CA
-openssl genrsa -out "${DEV_CA}.key" 4096
-openssl req -x509 -new -nodes -key "${DEV_CA}.key" -sha256 -days 1024 -out "${DEV_CA}.crt" -subj "/CN=Local Dev CA"
+openssl req -x509 -out "$LOCALHOST_CRT" -keyout "$LOCALHOST_KEY" -newkey rsa:2048 \
+  -nodes -sha256 -subj '/CN=localhost' -extensions EXT -config "$TMP_CONF_FILE"
 
-# 2. Create localhost cert signed by dev CA
-openssl genrsa -out "${LOCALHOST}.key" 2048
-openssl req -new -key "${LOCALHOST}.key" -out "${LOCALHOST}.csr" -subj "/CN=localhost"
-openssl x509 -req -in "${LOCALHOST}.csr" -CA "${DEV_CA}.crt" -CAkey "${DEV_CA}.key" -CAcreateserial \
-  -out "${LOCALHOST}.crt" -days 365 -sha256
+chmod +r $LOCALHOST_CRT
+chmod +r $LOCALHOST_KEY
 
+rm "$TMP_CONF_FILE"
 
-chmod a+r "$REV_PROXY_DEP_DIR"/*
+echo "\
+you might want to add the generated cert to trusted certs in your browser
+check out this one i.e.: https://browserfy.net/index.php/2025/05/31/how-to-manage-your-ssl-certificates-in-brave/
+"
+
+echo "CRT is generated at $(realpath $LOCALHOST_CRT)"
