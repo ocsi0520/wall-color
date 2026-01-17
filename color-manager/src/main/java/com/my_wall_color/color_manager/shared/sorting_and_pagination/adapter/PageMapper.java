@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PageMapper {
-    public <T> PageDTO<T> toDomain(Page<T> springPage) {
-        return new PageDTO<>(
-                springPage.getContent(),
-                springPage.getNumber(),
-                springPage.getSize(),
-                springPage.getTotalElements(),
-                springPage.getTotalPages()
-        );
-    }
+  public <T> PageDTO<T> toDomain(Page<T> springPage) {
+    return new PageDTO<>(
+        springPage.getContent(),
+        springPage.getNumber(),
+        springPage.getSize(),
+        springPage.getTotalElements(),
+        springPage.getTotalPages()
+    );
+  }
 }

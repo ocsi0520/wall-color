@@ -6,17 +6,17 @@ import org.mapstruct.ObjectFactory;
 
 @Mapper(componentModel = "spring")
 public interface JpaColorMapper {
-    JpaColor fromDomain(Color color);
+  JpaColor fromDomain(Color color);
 
-    @ObjectFactory
-    default Color toDomain(JpaColor color) {
-        return Color.create(
-                color.getId(),
-                color.getRed(),
-                color.getGreen(),
-                color.getBlue(),
-                color.getName(),
-                color.getRecordedBy()
-        );
-    }
+  @ObjectFactory
+  default Color toDomain(JpaColor color) {
+    return Color.create(
+        color.getId(),
+        color.getRed(),
+        color.getGreen(),
+        color.getBlue(),
+        color.getName(),
+        color.getRecordedBy()
+    );
+  }
 }
