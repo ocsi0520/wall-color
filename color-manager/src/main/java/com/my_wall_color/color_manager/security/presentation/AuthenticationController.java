@@ -47,6 +47,7 @@ public class AuthenticationController {
 
     private Cookie createTokenCookieFrom(TokenResult tokenResult) {
         Cookie tokenCookie = new Cookie(CookieBearerTokenResolver.TOKEN_COOKIE_NAME, tokenResult.token());
+        tokenCookie.setSecure(true);
         tokenCookie.setHttpOnly(true);
         tokenCookie.setMaxAge((int) tokenResult.maxAge().toSeconds());
         tokenCookie.setDomain(domainForTokenCookie);

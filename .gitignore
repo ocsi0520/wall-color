@@ -1,5 +1,9 @@
 .env
-.pem
+*.pem
 .vscode
 .idea
 local-*.sql
+*.crt
+*.key
+*.srl
+*.csr

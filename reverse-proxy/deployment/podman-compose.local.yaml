@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  reverse-proxy:
+    container_name: wall-color-reverse-proxy
+    image: macbre/nginx-http3:latest
+    depends_on:
+      - backend
+      - frontend
+    ports:
+      - "2000:2000/tcp"
+      - "2000:2000/udp"
+    volumes:
+      - ./reverse-proxy/deployment/reverse-proxy.conf:/etc/nginx/nginx.conf:ro,Z
+      - ./reverse-proxy/deployment/certs/localhost.key:/etc/ssl/private/localhost.key:ro,Z
+      - ./reverse-proxy/deployment/certs/localhost.crt:/etc/ssl/certs/localhost.crt:ro,Z
