@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class DummyController {
 
-    @GetMapping("/asd")
-    public String bla() {
-        return "asd";
-    }
+  @GetMapping("/asd")
+  public String bla() {
+    return "asd";
+  }
 
-    @GetMapping("/for-admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String blaAdmin() { return "asd"; }
+  @GetMapping("/for-admin")
+  @PreAuthorize("hasRole('ADMIN')")
+  public String blaAdmin() {
+    return "asd";
+  }
 }

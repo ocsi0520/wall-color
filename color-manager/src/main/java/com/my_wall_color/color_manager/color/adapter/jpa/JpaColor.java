@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class JpaColor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    private Short red;
-    private Short green;
-    private Short blue;
+  private Short red;
+  private Short green;
+  private Short blue;
 
-    private String name;
-    private Integer recordedBy;
+  private String name;
+  private Integer recordedBy;
 }

@@ -4,5 +4,5 @@ import java.util.Optional;
 
 @FunctionalInterface
 public interface SortOrderToEnumMapper<F extends Enum<F>> {
-    Optional<F> mapSortOrderToEnum(String sortOrderName);
+  Optional<F> mapSortOrderToEnum(String sortOrderName);
 }

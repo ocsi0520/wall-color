@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
-        name = "User_join_Color",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"app_user_id", "color_id"})
+    name = "User_join_Color",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"app_user_id", "color_id"})
 )
 @AllArgsConstructor
 @NoArgsConstructor
 public class JpaColorUserJoin {
-    @EmbeddedId
-    private ColorUserJoinKey id;
+  @EmbeddedId
+  private ColorUserJoinKey id;
 }

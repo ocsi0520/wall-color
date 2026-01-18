@@ -7,13 +7,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JpaColorConfig {
-    @Bean
-    JpaSortAndPaginationMapper<ColorField> JpaSortAndPaginationMapper() {
-        return new JpaSortAndPaginationMapper<>(value ->
-                switch (value) {
-                    case NAME -> "name";
-                    case ID -> "id";
-                }
-        );
-    }
+  @Bean
+  JpaSortAndPaginationMapper<ColorField> jpaSortAndPaginationMapper() {
+    return new JpaSortAndPaginationMapper<>(value ->
+        switch (value) {
+          case NAME -> "name";
+          case ID -> "id";
+        }
+    );
+  }
 }

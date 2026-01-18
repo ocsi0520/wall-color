@@ -13,14 +13,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JpaUser {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    private String username;
-    private String password;
-    private String name;
+  private String username;
+  private String password;
+  private String name;
 
-
-    private Boolean isAdmin;
+  private Boolean isAdmin;
 }
