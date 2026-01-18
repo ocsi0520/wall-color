@@ -22,6 +22,11 @@ class JpaColorMapperTest {
   }
 
   @Test
+  void fromNullDomain() {
+    assertThat(unitUnderTest.fromDomain(null)).isNull();
+  }
+
+  @Test
   void toDomain() {
     JpaColor jpaColor = new JpaColor(971, (short) 10, (short) 20, (short) 30, "test-color", 31);
     Color color = unitUnderTest.toDomain(jpaColor);
@@ -31,5 +36,10 @@ class JpaColorMapperTest {
     assertThat(color.getBlue()).isEqualTo((short) 30);
     assertThat(color.getName()).isEqualTo("test-color");
     assertThat(color.getRecordedBy()).isEqualTo(31);
+  }
+
+  @Test
+  void toNullDomain() {
+    assertThat(unitUnderTest.toDomain(null)).isNull();
   }
 }

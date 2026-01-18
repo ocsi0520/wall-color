@@ -23,6 +23,11 @@ class JpaUserMapperTest {
   }
 
   @Test
+  void fromNullDomain() {
+    assertThat(unitUnderTest.fromDomain(null)).isNull();
+  }
+
+  @Test
   void toDomain() {
     var expectedUser = new UserFixture().jdoe;
     expectedUser.setId(971);
@@ -32,5 +37,10 @@ class JpaUserMapperTest {
             expectedUser.getName(), expectedUser.getIsAdmin());
     User actual = unitUnderTest.toDomain(jpaEntity);
     assertThat(actual).isEqualTo(expectedUser);
+  }
+
+  @Test
+  void toNullDomain() {
+    assertThat(unitUnderTest.toDomain(null)).isNull();
   }
 }

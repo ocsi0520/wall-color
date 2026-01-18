@@ -10,6 +10,10 @@ public interface JpaColorMapper {
 
   @ObjectFactory
   default Color toDomain(JpaColor color) {
+    if (color == null) {
+      return null;
+    }
+
     return Color.create(
         color.getId(),
         color.getRed(),

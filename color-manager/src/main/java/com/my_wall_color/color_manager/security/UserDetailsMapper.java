@@ -11,6 +11,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Mapper(componentModel = "spring")
 public class UserDetailsMapper {
   UserDetails fromDomain(User user) {
+    if (user == null) {
+      return null;
+    }
+
     return new UserDetails() {
       @Override
       public Collection<? extends GrantedAuthority> getAuthorities() {

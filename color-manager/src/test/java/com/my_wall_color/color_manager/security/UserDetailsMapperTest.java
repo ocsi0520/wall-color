@@ -39,4 +39,9 @@ class UserDetailsMapperTest {
     assertThat(details.getUsername()).isEqualTo(alexUser.getUsername());
     assertThat(details.getPassword()).isEqualTo(alexUser.getPassword());
   }
+
+  @Test
+  void shouldMapNull() {
+    assertThat(unitUnderTest.fromDomain(null)).isNull();
+  }
 }
