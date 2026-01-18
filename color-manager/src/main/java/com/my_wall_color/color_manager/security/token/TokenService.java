@@ -17,7 +17,7 @@ public class TokenService {
   private final JwtEncoder encoder;
   private final Clock clock;
   private final Duration maxAge;
-  public static String ROLES_CLAIM_NAME = "roles";
+  public static final String ROLES_CLAIM_NAME = "roles";
 
   public TokenService(JwtEncoder encoder, Clock clock,
                       @Value("${token.max-age-seconds:3600}") int maxAgeInSeconds) {
