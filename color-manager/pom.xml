@@ -28,6 +28,8 @@
     </scm>
     <properties>
         <java.version>25</java.version>
+        <do.linting>false</do.linting>
+        <do.tests>true</do.tests>
     </properties>
     <dependencies>
         <dependency>
@@ -119,6 +121,21 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>skip-tests-when-linting</id>
+            <activation>
+                <property>
+                    <name>do.linting</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <do.tests>false</do.tests>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -129,6 +146,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <skip>${do.linting}</skip>
                     <argLine>
                         @{argLine}
                         -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
@@ -171,6 +189,7 @@
                     <failOnViolation>true</failOnViolation>
                     <printFailingErrors>true</printFailingErrors>
                     <minimumTokens>65</minimumTokens>
+                    <skip>${do.tests}</skip>
                 </configuration>
                 <executions>
                     <execution>
@@ -200,6 +219,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+                    <skip>${do.tests}</skip>
                     <configLocation>google_checks.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
@@ -225,6 +245,9 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.14</version>
+                <configuration>
+                    <skip>${do.linting}</skip>
+                </configuration>
                 <executions>
                     <!-- Step 1: Prepare JaCoCo agent to collect execution data during tests -->
                     <execution>
@@ -286,6 +309,7 @@
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.9.8.0</version>
                 <configuration>
+                    <skip>${do.tests}</skip>
                     <plugins>
                         <plugin>
                             <groupId>com.h3xstream.findsecbugs</groupId>
