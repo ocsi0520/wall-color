@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Do linting
-        run: mvn verify -Ddo.linting
+        run: mvn verify -B -Ddo.linting
 
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
       - name: Update dependency graph
@@ -41,5 +41,8 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
           cache: maven
+      - name: init projeect
+        working-directory: ..
+        run: ./project-init.sh
       - name: Do tests
-        run: mvn verify
+        run: mvn verify -B
