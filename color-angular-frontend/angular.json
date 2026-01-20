@@ -75,7 +75,20 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "buildTarget": "::development",
-            "tsConfig": "tsconfig.spec.json"
+            "tsConfig": "tsconfig.spec.json",
+            "coverageThresholds": {
+              "statements": 90,
+              "branches": 90,
+              "functions": 90,
+              "lines": 90
+            },
+            "coverageInclude": [
+              "!src/main.ts",
+              "!src/**/*.routes.ts",
+              "!src/**/*.config.ts",
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         },
         "lint": {
