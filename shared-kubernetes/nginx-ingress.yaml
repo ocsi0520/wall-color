@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: wall-color
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: localhost # TODO: proper domain name
+      http:
+        paths:
+          # Forward all /api requests to backend-service
+          - path: /api(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: wall-color-backend
+                port:
+                  number: 8080
+
+          # Forward all other requests to frontend-service
+          - path: /(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: wall-color-frontend
+                port:
+                  number: 4200

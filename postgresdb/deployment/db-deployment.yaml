@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: wall-color-postgres
+  namespace: wall-color
+spec:
+  serviceName: wall-color-postgres
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wall-color-postgres
+  template:
+    metadata:
+      labels:
+        app: wall-color-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: docker.io/postgres:18-alpine
+        ports:
+        - containerPort: 5432
+          name: postgres
+        envFrom:
+        - configMapRef:
+            name: wall-color-config
+        - secretRef:
+            name: wall-color-secret
+        volumeMounts:
+        - name: wall-color-postgres-storage
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+  volumeClaimTemplates:
+  - metadata:
+      name: wall-color-postgres-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wall-color-postgres
+spec:
+  clusterIP: None
+  selector:
+    app: wall-color-postgres
+  ports:
+  - port: 5432
+    targetPort: 5432

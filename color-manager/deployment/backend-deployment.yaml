@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wall-color-backend
+  namespace: wall-color
+spec:
+  selector:
+    app: wall-color-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wall-color-backend
+  namespace: wall-color
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wall-color-backend
+  template:
+    metadata:
+      labels:
+        app: wall-color-backend
+    spec:
+      containers:
+        - name: wall-color-backend
+          image: wall-color-backend:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: wall-color-secret
+            - configMapRef:
+                name: wall-color-config
+          env:
+            - name: POSTGRES_PATH
+              value: wall-color-postgres-0.wall-color-postgres.wall-color.svc.cluster.local:5432
+            - name: JAVA_OPTS
+              value: "-Xmx512m -Xms256m"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          # TODO: do actuator
+          # livenessProbe:
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
