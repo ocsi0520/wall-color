@@ -7,5 +7,4 @@ POSTGRES_PASSWORD=my_secret_password
 POSTGRES_DB=appdb
 
 # spring boot
-TOKEN_COOKIE_DOMAIN=localhost
 TOKEN_MAX_AGE_SECONDS=3600
