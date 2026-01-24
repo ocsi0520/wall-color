@@ -1,7 +1,7 @@
 # =========================
 # Stage 1: Build Spring Boot JAR
 # =========================
-FROM maven:3.9.12-eclipse-temurin-25-alpine AS build
+FROM docker.io/maven:3.9.12-eclipse-temurin-25-alpine AS build
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN mvn clean package -DskipTests
 # =========================
 # Stage 2: Runtime
 # =========================
-FROM eclipse-temurin:25.0.1_8-jre-ubi10-minimal
+FROM docker.io/eclipse-temurin:25.0.1_8-jre-ubi10-minimal
 
 WORKDIR /app
 

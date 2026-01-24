@@ -3,7 +3,7 @@ version: "3.9"
 services:
   reverse-proxy:
     container_name: wall-color-reverse-proxy
-    image: macbre/nginx-http3:latest
+    image: docker.io/macbre/nginx-http3:latest
     depends_on:
       - backend
       - frontend

@@ -1,5 +1,5 @@
 # Use the official PostgreSQL image as the base
-FROM postgres:18
+FROM docker.io/postgres:18
 
 COPY seed/00_schema.sql /docker-entrypoint-initdb.d/
 
