@@ -35,12 +35,13 @@ spec:
             - containerPort: 8080
           envFrom:
             - secretRef:
-                name: wall-color-secret
+                name: wall-color-db-secret
             - configMapRef:
                 name: wall-color-config
           env:
             - name: POSTGRES_PATH
-              value: wall-color-postgres-0.wall-color-postgres.wall-color.svc.cluster.local:5432
+              # TODO: put into config map
+              value: wall-color-postgres-rw.wall-color.svc.cluster.local:5432
             - name: JAVA_OPTS
               value: "-Xmx512m -Xms256m"
           resources:

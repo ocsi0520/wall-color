@@ -1,58 +1,34 @@
-apiVersion: apps/v1
-kind: StatefulSet
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
 metadata:
   name: wall-color-postgres
   namespace: wall-color
 spec:
-  serviceName: wall-color-postgres
-  replicas: 2
-  selector:
-    matchLabels:
-      app: wall-color-postgres
-  template:
-    metadata:
-      labels:
-        app: wall-color-postgres
-    spec:
-      containers:
-      - name: postgres
-        image: docker.io/postgres:18-alpine
-        ports:
-        - containerPort: 5432
-          name: postgres
-        envFrom:
-        - configMapRef:
-            name: wall-color-config
-        - secretRef:
-            name: wall-color-secret
-        volumeMounts:
-        - name: wall-color-postgres-storage
-          mountPath: /var/lib/postgresql/data
-          subPath: postgres
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-  volumeClaimTemplates:
-  - metadata:
-      name: wall-color-postgres-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: wall-color-postgres
-spec:
-  clusterIP: None
-  selector:
-    app: wall-color-postgres
-  ports:
-  - port: 5432
-    targetPort: 5432
+  instances: 2
+
+  imageName: docker.io/postgres:18-alpine
+  bootstrap:
+    initdb:
+      # TODO: avoid hardcode with Kustomize or Helm
+      #   + de-duplicate database with value from shared-config.yaml
+      database: app
+      owner: admin
+      secret:
+        name: wall-color-db-secret
+      postInitApplicationSQLRefs:
+        configMapRefs:
+          # this needs `kubectl create configmap wall-color-postgres-schema --from-file=../seed/00_schema.sql -n wall-color`
+          - name: wall-color-postgres-schema
+            key: 00_schema.sql
+  storage:
+    size: 1Gi
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  # Optional but recommended
+  primaryUpdateStrategy: unsupervised
