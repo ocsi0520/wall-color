@@ -5,4 +5,4 @@ metadata:
   namespace: wall-color
 data:
   POSTGRES_DB: {{ .Values.database.name }}
-  TOKEN_MAX_AGE_SECONDS: {{ .Values.tokenMaxAgeInSeconds }}
+  TOKEN_MAX_AGE_SECONDS: "{{ .Values.tokenMaxAgeInSeconds }}"
