@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: wall-color-backend
-          image: wall-color-backend:latest
+          image: "{{ .Values.imageRegistry }}/wall-color-backend:latest"
           ports:
             - containerPort: 8080
           envFrom:
@@ -40,7 +40,6 @@ spec:
                 name: wall-color-config
           env:
             - name: POSTGRES_PATH
-              # TODO: put into config map
               value: wall-color-postgres-rw.wall-color.svc.cluster.local:5432
             - name: JAVA_OPTS
               value: "-Xmx512m -Xms256m"

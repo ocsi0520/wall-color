@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wall-color-postgres-schema
+  namespace: wall-color
+data:
+  init.sql: |
+{{ .Files.Get "files/00_schema.sql" | indent 4 }}

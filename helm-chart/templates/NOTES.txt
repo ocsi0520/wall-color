@@ -1,0 +1,12 @@
+CloudNativePostGres is used in db-deployment. As a result you need to install it.
+Either with
+```sh
+helm install cloudnative-pg \
+  cloudnative-pg/cloudnative-pg \
+  --namespace cnpg-system \
+  --create-namespace
+```
+Or
+
+kubectl apply --server-side -f \
+  https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.28/releases/cnpg-1.28.0.yaml

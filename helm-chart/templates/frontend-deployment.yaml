@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: wall-color-frontend
-          image: wall-color-frontend:latest
+          image: "{{ .Values.imageRegistry }}/wall-color-frontend:latest"
           ports:
             - containerPort: 4200
           resources:

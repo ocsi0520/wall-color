@@ -6,18 +6,16 @@ metadata:
 spec:
   instances: 2
 
-  imageName: docker.io/postgres:18-alpine
+  imageName: ghcr.io/cloudnative-pg/postgresql:18
+
   bootstrap:
     initdb:
-      # TODO: avoid hardcode with Kustomize or Helm
-      #   + de-duplicate database with value from shared-config.yaml
-      database: app
-      owner: admin
+      database: {{ .Values.database.name }}
+      owner: {{ .Values.database.username }}
       secret:
         name: wall-color-db-secret
       postInitApplicationSQLRefs:
         configMapRefs:
-          # this needs `kubectl create configmap wall-color-postgres-schema --from-file=../seed/00_schema.sql -n wall-color`
           - name: wall-color-postgres-schema
             key: 00_schema.sql
   storage:
