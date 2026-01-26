@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: wall-color-backend
-          image: "{{ .Values.imageRegistry }}/wall-color-backend:latest"
+          image: "{{ .Values.imageRegistry }}/wall-color-backend-image:latest"
           ports:
             - containerPort: 8080
           envFrom:
