@@ -4,5 +4,5 @@ metadata:
   name: wall-color-postgres-schema
   namespace: wall-color
 data:
-  init.sql: |
+  00_schema.sql: |
 {{ .Files.Get "files/00_schema.sql" | indent 4 }}
