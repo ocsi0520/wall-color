@@ -15,7 +15,7 @@ To get started
 --------------
 Hit `./project-init.sh` in a terminal, then `./local-compose.sh up` and you get a local dev environment with hot reloading for both backend and frontend, plus TLS for the reverse proxy.
 When you want to quit, either hit ctrl/command + c or (recommended) open a new terminal/tab and hit `./local-compose down`.
-Check out other docs to see more details regarding [project initialization](TODO) and [local development](./docs/local-dev.md).
+Check out other docs to see more details regarding [project initialization](./docs/project-initialization.md) and [local development](./docs/local-dev.md).
 Regarding kubernetes manifests [click here](./docs/kubernetes-manifests.md).
 
 Backend, frontend and database are directly accessible for debugging purposes:
