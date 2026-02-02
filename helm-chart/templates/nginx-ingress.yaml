@@ -3,8 +3,18 @@ kind: Ingress
 metadata:
   name: wall-color-ingress
   namespace: wall-color
+{{- if .Values.clusterIssuer.enabled }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.clusterIssuer.name | quote }}
+{{- end }}
 spec:
   ingressClassName: nginx
+{{- if .Values.clusterIssuer.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.host | quote }}
+      secretName: {{ .Values.clusterIssuer.hostSecretName | quote }}
+{{- end }}
   rules:
     - host: {{ .Values.host }}
       http:
