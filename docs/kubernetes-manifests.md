@@ -85,7 +85,7 @@ CloudNativePG
 -------------
 There are dozens of pre-written operators for PostgreSQL, the one that I picked is [CloudNativePG](https://cloudnative-pg.io/).
 
-As with the simple [Postgre container](./local-dev.md#database-part), we would like to have an initial database structure (we can leave out initial data, we only need the schema.)
+As with the simple [Postgre container](./local-dev.md#database), we would like to have an initial database structure (we can leave out initial data, we only need the schema.)
 The initialization is quite similar, but still differs in a significant way: Instead of copying sql files, we need to reference ConfigMaps or Secrets containing SQL commands in [`postInitApplicationSQLRefs`](https://cloudnative-pg.io/documentation/1.17/api_reference/#postinitapplicationsqlrefs).
 
 Since we are using Helm that's doable by including _00_schema.sql_ file with [`.Files.Get`](https://helm.sh/docs/chart_template_guide/accessing_files) Go template.
