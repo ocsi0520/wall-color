@@ -1,6 +1,6 @@
 Project initialization
 ----------------------
-As described in the [Get started](../README.md#to-get-started) section, initializing the project requires a single step: run `project-init.sh` in a POSIX-compliant terminal.
+As described in the [Geting started](../README.md#getting-started) section, initializing the project requires a single step: run `project-init.sh` in a POSIX-compliant terminal.
 
 The script is a plain [shell script](https://en.wikipedia.org/wiki/Shell_script) and intentionally avoids Bash-specific features, so it can be executed safely on macOS and other POSIX-compatible systems.
 

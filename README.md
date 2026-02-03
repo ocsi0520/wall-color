@@ -1,30 +1,54 @@
 Wall-Color
----
+---------
 
-This is a simple practice project for discovering the depth of Spring Boot and the needed DevOps tools for deploying a whole application (frontend, backend, database) in a manageable way.
+A practice project aimed at exploring Spring Boot in depth and the DevOps tooling required to deploy a complete application stack — frontend, backend, and database — in a manageable and reproducible way.
 
 Required tools
 --------------
-For project initialization, you need a POSIX-compatible terminal environment (e.g., Git Bash, GNOME Terminal, MSYS2, or Cygwin) so that standard Unix utilities such as `openssl`, `chmod`, `test`, `echo`, `printf`, `tail`, `mkdir`, and the `>>` redirection operator are available.
+### Project initialization
+A POSIX-compatible terminal environment is required to initialize the project (e.g. Git Bash, GNOME Terminal, MSYS2, or Cygwin). The environment must provide standard Unix utilities such as `openssl`, `chmod`, `test`, `echo`, `printf`, `tail`, `mkdir`, and support for the `>>` redirection operator.
 
-For running the project in a local multi-container environment you either need [Docker](https://docs.docker.com/engine/install/) & [Docker-Compose](https://docs.docker.com/compose/install/), or [Podman](https://podman.io/docs/installation) and [Podman-Compose](https://github.com/containers/podman-compose#installation).
+### Local development
+To run the application locally in a multi-container environment, either of the following setups is required:
 
-For running the project in a [Kubernetes](https://kubernetes.io/) cluster, you obviously need some kubernetes implementation such as Kubernetes itself, [K3s](https://k3s.io/), [k3d](https://k3d.io/v5.6.3/), or [microk8s](https://canonical.com/microk8s) and you also need [helm](https://helm.sh/docs/).
+- [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
+- [Podman](https://podman.io/docs/installation) and [Podman Compose](https://github.com/containers/podman-compose#installation)
 
-To get started
+### Kubernetes
+To deploy the application to a [Kubernetes](https://kubernetes.io/) cluster, a Kubernetes distribution such as Kubernetes itself, [K3s](https://k3s.io/), [k3d](https://k3d.io/v5.6.3/), or [microk8s](https://canonical.com/microk8s) is required, along with [Helm](https://helm.sh/docs/).
+
+Getting started
 --------------
-Hit `./project-init.sh` in a terminal, then `./local-compose.sh up` and you get a local dev environment with hot reloading for both backend and frontend, plus TLS for the reverse proxy.
-When you want to quit, either hit ctrl/command + c or (recommended) open a new terminal/tab and hit `./local-compose down`.
-Check out other docs to see more details regarding [project initialization](./docs/project-initialization.md) and [local development](./docs/local-dev.md).
-Regarding kubernetes manifests [click here](./docs/kubernetes-manifests.md).
+Run the following commands from a terminal from the root of the project:
 
-Backend, frontend and database are directly accessible for debugging purposes:
-- BE: 8080 port
-- FE: 4200 port
-- DB: 5432 port
+```sh
+./project-init.sh
+./local-compose.sh up
+```
+This starts a local development environment with hot reloading enabled for both the backend and frontend, as well as TLS support for the reverse proxy.
 
-There's also reverse proxy on port 2000 before BE/FE. It already supports http3,http2,http1.1 protocols and it uses TLS. (Most probably because of the self certification and localhost, your browser will use http2.)
-More details in [reverse proxy docs](./docs/reverse-proxy.md)
+To stop the environment, either press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>C</kbd>, or (recommended) open a new terminal or tab and  run:
+```sh
+./local-compose.sh down
+```
+
+For further details, see:
+- [Project initialization](./docs/project-initialization.md)
+- [Local development](./docs/local-dev.md)
+- [Kubernetes manifests](./docs/kubernetes-manifests.md)
+
+Direct access to services
+-------------------------
+For debugging and development purposes, the individual services are directly accessible:
+
+- Backend: localhost:8080
+- Frontend: localhost:4200
+- Database: localhost:5432
+
+A reverse proxy is also available on port **2000**, sitting in front of the backend and frontend. It supports **HTTP/1.1**, **HTTP/2**, and **HTTP/3**, and terminates **TLS**.
+Due to the use of a self-signed certificate on `localhost`, most browsers will negotiate **HTTP/2** by default.
+
+Additional details are available in the [reverse proxy documentation](./docs/reverse-proxy.md).
 
 General architecture
 -------------------
