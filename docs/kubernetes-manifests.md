@@ -1,26 +1,29 @@
 Kubernetes deployment
 ---------------------
-As aformentioned in the main docs, you need Kubernetes and Helm. I created the most basic _helm-chart_.
-To use it you need to open a terminal at wall-color folder and type:
+As described in the [main documentation](../README.md), deploying the application requires **Kubernetes** and **Helm**. A minimal Helm chart is provided under the _helm-chart_ directory.
+
+To install the chart, open a terminal at the project root and run:
+
 ```sh
-helm install <release name you pick> ./helm-chart/ --values ./helm-chart/values.yaml
-# i.e.
+helm install <release-name> ./helm-chart/ --values ./helm-chart/values.yaml
+# example
 helm install wall-color-release ./helm-chart/ --values ./helm-chart/values.yaml
 ```
-_values.yaml_ is the same as env-example.txt: it's just an example, please change values, or rather use your own yaml file.
-Also consider configuring [encryption at-rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/) for Secrets.
 
-In order to revoke deployment just use `uninstall` command:
+The provided _values.yaml_ serves the same purpose as env-example.txt: it is only an example. Adjust the values as needed, or supply your own values file instead.
+For production environments, consider enabling [encryption at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/) for Kubernetes Secrets.
+
+To remove the deployment, use the uninstall command:
 
 ```sh
-helm uninstall <release name you pick>
-# i.e.
+helm uninstall <release-name>
+# example
 helm uninstall wall-color-release
 ```
 
 Kubernetes components
 ---------------------
-In case you checked the [general architecture](../README.md#general-architecture), then there's nothing that would surprise you:
+If the general architecture is already familiar, the Kubernetes layout should not contain any surprises:
 
 ```mermaid
 flowchart LR
@@ -51,8 +54,8 @@ flowchart LR
         DB_RO --> DB2
     end
 
-    ING -- /api prefixed calls --> BE_SVC
-    ING -- non-api calls --> FE_SVC
+    ING -- '/api'-prefixed calls --> BE_SVC
+    ING -- non-API calls --> FE_SVC
 
     BE1 --> DB_RW
     BE2 --> DB_RW
@@ -63,33 +66,35 @@ flowchart LR
 
 Database
 --------
-As you can see each service has 2 replicas. For stateless services, such as frontend and backend, there's not much complexity to add when running them on multiple instances (pods).
+Each service runs with two replicas. For stateless components such as the frontend and backend, horizontal scaling is straightforward and does not introduce additional complexity.
 
-However, in case of a database, that's a whole other story. If we use [deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
-the same way as we did with stateless services, we would end up with basically two different database instances, with two different [persistent volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/), which do not communicate with each other. Query 'A' goes to one, query 'B' goes to the other instance, leaving an inconsistent state.
+Databases are fundamentally different. If a database were deployed using a standard [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), each replica would receive its own [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/). These instances would not communicate with one another, leading to divergent state: query A could hit one instance, while query B hits another.
 
-[Statefulset](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) per se wouldn't help much. It would provide ordered unique network identifiers, but the main problem remains:
-Database instances do not communicate with each other. The solution for this is tedious and complex if we want to tackle it by hand, luckily we already have a solution out-of-box: [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
+Using a [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/) alone does not solve this problem. While it provides stable network identities and ordered startup, it does not address replication, failover, or consistency.
+Managing these concerns manually is complex and error-prone. Kubernetes addresses this class of problems through the [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
 
 CAP
 ---
-When we have a distributed database system, we strive for 3 things:
-- consistency among the instances
+In a distributed database system, three properties are typically desired:
+- consistency between instances
 - high availability
-- resilience against node failure
+- tolerance to node failures
 
-As [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem) says we can only pick two, although we can make compromises.
-An operator handles these compromises for us.
+According to the [CAP theorem](https://en.wikipedia.org/wiki/CAP_theorem), only two of these guarantees can be fully achieved at the same time, although practical systems often implement trade-offs.
+
+A database operator is responsible for managing these trade-offs on behalf of the user.
 
 CloudNativePG
 -------------
-There are dozens of pre-written operators for PostgreSQL, the one that I picked is [CloudNativePG](https://cloudnative-pg.io/).
+There are many existing PostgreSQL operators available. This project uses [CloudNativePG](https://cloudnative-pg.io/).
 
-As with the simple [Postgre container](./local-dev.md#database), we would like to have an initial database structure (we can leave out initial data, we only need the schema.)
-The initialization is quite similar, but still differs in a significant way: Instead of copying sql files, we need to reference ConfigMaps or Secrets containing SQL commands in [`postInitApplicationSQLRefs`](https://cloudnative-pg.io/documentation/1.17/api_reference/#postinitapplicationsqlrefs).
+Similar to the local PostgreSQL container setup, an initial database structure is required. In this case, only the schema is needed from the [_seed_](../postgresdb/seed/) folder.
 
-Since we are using Helm that's doable by including _00_schema.sql_ file with [`.Files.Get`](https://helm.sh/docs/chart_template_guide/accessing_files) Go template.
-I'm keen on single source of truth. Neverthless, Helm can't read files beyond its scope (_helm-chart_ folder), so directly I wasn't able to reach _postgresdb/seed/00_schema.sql_. The solution was to create a relative symbolic link in the folder. Through this symbolic link the file could be read and included into _00_schema.sql.yaml_ file.
+Initialization differs from the container-based approach. Instead of copying SQL files into the image, CloudNativePG references SQL statements via ConfigMaps or Secrets using [`postInitApplicationSQLRefs`](https://cloudnative-pg.io/documentation/1.17/api_reference/#postinitapplicationsqlrefs).
+
+Because Helm is used, the schema file (_00\_schema.sql_) is included via the .Files.Get templating function.
+
+To maintain a single source of truth, the same schema file is reused. However, Helm cannot access files outside the chart directory (_helm-chart_). To work around this limitation, a relative symbolic link is created within the chart directory, allowing the schema file to be included in _00\_schema.sql.yaml_
 
 
 Summary of ports
