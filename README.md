@@ -24,7 +24,7 @@ Backend, frontend and database are directly accessible for debugging purposes:
 - DB: 5432 port
 
 There's also reverse proxy on port 2000 before BE/FE. It already supports http3,http2,http1.1 protocols and it uses TLS. (Most probably because of the self certification and localhost, your browser will use http2.)
-More details in [reverse proxy docs](TODO)
+More details in [reverse proxy docs](./docs/reverse-proxy.md)
 
 General architecture
 -------------------
