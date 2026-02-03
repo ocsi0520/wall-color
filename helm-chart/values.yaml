@@ -1,0 +1,16 @@
+imageRegistry: localhost:32000
+host: localhost
+tokenMaxAgeInSeconds: 3600
+
+database:
+  name: "app"
+  username: "admin"
+  password: "my_secret_password"
+
+clusterIssuer:
+  enabled: false   # default: do NOT install
+  name: letsencrypt-staging
+  email: you@example.com
+  server: https://acme-staging-v02.api.letsencrypt.org/directory
+  privateKeySecretName: letsencrypt-staging-key
+  hostSecretName: "staging-tls"

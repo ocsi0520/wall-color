@@ -7,7 +7,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.Clock;
 import java.time.Instant;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,18 +18,15 @@ public class AuthenticationController {
   private final AuthenticationManager manager;
   private final TokenService tokenService;
   private final Clock clock;
-  private final String domainForTokenCookie;
 
   public AuthenticationController(
       AuthenticationManager manager,
       TokenService tokenService,
-      Clock clock,
-      @Value("${token.cookie.domain:localhost}") String domain
+      Clock clock
   ) {
     this.manager = manager;
     this.tokenService = tokenService;
     this.clock = clock;
-    this.domainForTokenCookie = domain;
   }
 
   @PostMapping("/auth/login")
@@ -50,7 +46,6 @@ public class AuthenticationController {
     tokenCookie.setSecure(true);
     tokenCookie.setHttpOnly(true);
     tokenCookie.setMaxAge((int) tokenResult.maxAge().toSeconds());
-    tokenCookie.setDomain(domainForTokenCookie);
     return tokenCookie;
   }
 }

@@ -1,0 +1,32 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: wall-color-postgres
+  namespace: wall-color
+spec:
+  instances: 2
+
+  imageName: ghcr.io/cloudnative-pg/postgresql:18
+
+  bootstrap:
+    initdb:
+      database: {{ .Values.database.name }}
+      owner: {{ .Values.database.username }}
+      secret:
+        name: wall-color-db-secret
+      postInitApplicationSQLRefs:
+        configMapRefs:
+          - name: wall-color-postgres-schema
+            key: 00_schema.sql
+  storage:
+    size: 1Gi
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  # Optional but recommended
+  primaryUpdateStrategy: unsupervised

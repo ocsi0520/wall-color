@@ -1,0 +1,1 @@
+../../postgresdb/seed/00_schema.sql

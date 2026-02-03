@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wall-color-frontend
+  namespace: wall-color
+spec:
+  selector:
+    app: wall-color-frontend
+  ports:
+    - protocol: TCP
+      port: 4200
+      targetPort: 4200
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wall-color-frontend
+  namespace: wall-color
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wall-color-frontend
+  template:
+    metadata:
+      labels:
+        app: wall-color-frontend
+    spec:
+      containers:
+        - name: wall-color-frontend
+          image: "{{ .Values.imageRegistry }}/wall-color-frontend-image:latest"
+          ports:
+            - containerPort: 4200
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

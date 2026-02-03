@@ -1,8 +1,8 @@
-FROM oven/bun:alpine
+FROM docker.io/oven/bun:alpine
 
 WORKDIR /app
 
-COPY . .
+COPY package.json .
 
 RUN ["bun", "i"]
 

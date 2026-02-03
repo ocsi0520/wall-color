@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wall-color-ingress
+  namespace: wall-color
+{{- if .Values.clusterIssuer.enabled }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.clusterIssuer.name | quote }}
+{{- end }}
+spec:
+  ingressClassName: nginx
+{{- if .Values.clusterIssuer.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.host | quote }}
+      secretName: {{ .Values.clusterIssuer.hostSecretName | quote }}
+{{- end }}
+  rules:
+    - host: {{ .Values.host }}
+      http:
+        paths:
+          # Forward all /api requests to backend-service
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: wall-color-backend
+                port:
+                  number: 8080
+
+          # Forward all other requests to frontend-service
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wall-color-frontend
+                port:
+                  number: 4200

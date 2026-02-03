@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource(properties = "token.cookie.domain=mozilla.org")
 class AuthenticationControllerIntegrationTest extends IntegrationTest {
   private static final String JWT_REGEXP_PATTERN = "((?:\\.?(?:[A-Za-z0-9-_]+)){3})";
 
@@ -72,8 +70,7 @@ class AuthenticationControllerIntegrationTest extends IntegrationTest {
 
     var cookieParts = tokenCookieContent.split("; ");
     assertThat(cookieParts.length).isGreaterThanOrEqualTo(3);
-    assertThat(cookieParts).contains("Max-Age=" + expectedMaxAgeInSeconds, "Secure", "HttpOnly",
-        "Domain=mozilla.org");
+    assertThat(cookieParts).contains("Max-Age=" + expectedMaxAgeInSeconds, "Secure", "HttpOnly");
     assertThat(cookieParts[0]).matches(TOKEN_COOKIE_NAME + '=' + JWT_REGEXP_PATTERN);
   }
 }
