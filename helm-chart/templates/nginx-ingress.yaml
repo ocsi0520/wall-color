@@ -6,6 +6,7 @@ metadata:
 {{- if .Values.clusterIssuer.enabled }}
   annotations:
     cert-manager.io/cluster-issuer: {{ .Values.clusterIssuer.name | quote }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 {{- end }}
 spec:
   ingressClassName: nginx
